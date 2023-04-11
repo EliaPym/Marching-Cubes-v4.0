@@ -27,8 +27,8 @@ public class WindowView {
 
     public void run(){
         try {
-            init();
-            loop();
+            init(); // initialise the program
+            loop(); // run loop as long as program remains open
 
             GLFW.glfwDestroyWindow(window);
             Callbacks.glfwFreeCallbacks(window);
@@ -38,7 +38,7 @@ public class WindowView {
         } catch (Exception e){
             e.printStackTrace();
         } finally {
-            cleanUp();
+            cleanUp(); // free allocated memory
         }
     }
 
@@ -55,12 +55,22 @@ public class WindowView {
     }
 
     private void createWindow(){
+        // set default window hints
         GLFW.glfwDefaultWindowHints();
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
+        // creates an OpenGL context of version 3.2
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
+        GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+        // select core functionality of OpenGL context
+        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
+        // OpenGL context is forwards compatible
+        GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GLFW.GLFW_TRUE);
 
+        // creates new GLFW window context
         window = GLFW.glfwCreateWindow(windowWidth, windowHeight, windowTitle, NULL, NULL);
 
+        // check if window has successfully been created
         if (window == NULL){
             GLFW.glfwTerminate();
             throw new RuntimeException("Failed to create the GLFW window");
