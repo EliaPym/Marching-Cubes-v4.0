@@ -14,15 +14,25 @@ public class WindowView {
     private static int windowHeight;
     private static String windowTitle;
     private static long window;
+
+    private float[] vertices;
+    private int[] indices;
+    private float[] colours;
+
     private static GLFWErrorCallback errorCallback;
     private static GLFWKeyCallback keyCallback;
+    private static ShaderProgram shaderProgram;
 
     public WindowView(int width, int height, String title){
         windowWidth = width;
         windowHeight = height;
         windowTitle = title;
+    }
 
-        run();
+    public void data(float[] vertices, int[] indices, float[] colours){
+        this.vertices = vertices;
+        this.indices = indices;
+        this.colours = colours;
     }
 
     public void run(){
@@ -42,7 +52,7 @@ public class WindowView {
         }
     }
 
-    public void init(){
+    private void init() throws Exception {
         errorCallback = GLFWErrorCallback.createPrint(System.err).set();
 
         if (!GLFW.glfwInit()){
@@ -50,8 +60,7 @@ public class WindowView {
         }
 
         createWindow();
-
-        GL.createCapabilities();
+        setupShader();
     }
 
     private void createWindow(){
@@ -93,17 +102,31 @@ public class WindowView {
 
             GLFW.glfwGetWindowSize(window, pWidth, pHeight);
 
+            // align window at centre of screen
             GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
             assert vidMode != null;
             GLFW.glfwSetWindowPos(window, (vidMode.width() - pWidth.get(0)) / 2, (vidMode.height() - pHeight.get(0)) / 2);
 
+            // create OpenGL context
             GLFW.glfwMakeContextCurrent(window);
+            GL.createCapabilities();
+
+            // enable v-sync
             GLFW.glfwSwapInterval(1);
             GLFW.glfwShowWindow(window);
         }
     }
 
-    public void loop(){
+    private void setupShader() throws Exception {
+        shaderProgram = new ShaderProgram();
+
+        shaderProgram.createVertexShader("");
+        shaderProgram.createFragmentShader("");
+        shaderProgram.link();
+        shaderProgram.bind();
+    }
+
+    private void loop(){
         while (!GLFW.glfwWindowShouldClose(window)){
             double time = GLFW.glfwGetTime();
 
@@ -113,7 +136,7 @@ public class WindowView {
         }
     }
 
-    public void cleanUp(){
+    private void cleanUp(){
 
     }
 }
