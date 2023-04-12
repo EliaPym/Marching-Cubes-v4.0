@@ -9,10 +9,12 @@ import java.nio.FloatBuffer;
 public class MeshLoader {
     private static int vaoID;
     private static int vboID;
+    private static int iboID;
 
-    public static void createMesh(float[] vertices, int[] indices, float[] colour){
+    public static Mesh createMesh(float[] vertices, int[] indices, float[] colour){
         vaoID = genVao();
         storeData(vertices);
+        return new Mesh(vaoID, vboID, iboID, indices.length);
     }
 
     private static int genVao(){
@@ -32,5 +34,10 @@ public class MeshLoader {
         } catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public static void cleanup(){
+        GL30.glDeleteVertexArrays(vaoID);
+        GL30.glDeleteBuffers(vboID);
     }
 }

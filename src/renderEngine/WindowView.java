@@ -1,12 +1,18 @@
 package renderEngine;
 
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Objects;
 
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class WindowView {
@@ -14,19 +20,29 @@ public class WindowView {
     private static int windowHeight;
     private static String windowTitle;
     private static long window;
+    private static Mesh mesh;
 
     private float[] vertices;
     private int[] indices;
     private float[] colours;
 
+    private int uniformModel;
+    private float angle = 0f;
+    private float anglePerSecond = 50f;
+    private Timer timer;
+
     private static GLFWErrorCallback errorCallback;
     private static GLFWKeyCallback keyCallback;
     private static ShaderProgram shaderProgram;
+
+    public static boolean renderWireframe = false;
 
     public WindowView(int width, int height, String title){
         windowWidth = width;
         windowHeight = height;
         windowTitle = title;
+
+        timer = new Timer();
     }
 
     public void data(float[] vertices, int[] indices, float[] colours){
@@ -39,12 +55,6 @@ public class WindowView {
         try {
             init(); // initialise the program
             loop(); // run loop as long as program remains open
-
-            GLFW.glfwDestroyWindow(window);
-            Callbacks.glfwFreeCallbacks(window);
-            GLFW.glfwTerminate();
-            errorCallback.free();
-
         } catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -60,6 +70,7 @@ public class WindowView {
         }
 
         createWindow();
+        mesh = MeshLoader.createMesh(vertices, indices, colours);
         setupShader();
     }
 
@@ -119,16 +130,51 @@ public class WindowView {
 
     private void setupShader() throws Exception {
         shaderProgram = new ShaderProgram();
+        System.out.println("Shader Program created");
 
-        shaderProgram.createVertexShader("");
-        shaderProgram.createFragmentShader("");
+        String vertexShader = "#version 150 core\n" +
+                "\n" +
+                "in vec3 position;\n" +
+                "in vec3 colour;\n" +
+                "\n" +
+                "out vec3 vertexColour;\n" +
+                "\n" +
+                "uniform mat4 model;\n" +
+                "uniform mat4 view;\n" +
+                "uniform mat4 projection;\n" +
+                "\n" +
+                "void main(){\n" +
+                "    vertexColour = colour;\n" +
+                "    mat4 pvm = projection * view * model;\n" +
+                "    gl_Position = pvm * vec4(position, 1.0);\n" +
+                "}";
+        String fragmentShader = "#version 150 core\n" +
+                "\n" +
+                "in vec3 vertexColour;\n" +
+                "\n" +
+                "out vec4 fragColour;\n" +
+                "\n" +
+                "void main(){\n" +
+                "    fragColour = vec4(vertexColour, 1.0);\n" +
+                "}";
+
+        shaderProgram.createVertexShader(vertexShader);
+        shaderProgram.createFragmentShader(fragmentShader);
         shaderProgram.link();
         shaderProgram.bind();
+
+        shaderProgram.createUniform("model");
+        shaderProgram.createUniform("view");
+        shaderProgram.createUniform("projection");
     }
 
     private void loop(){
         while (!GLFW.glfwWindowShouldClose(window)){
-            double time = GLFW.glfwGetTime();
+            //double time = GLFW.glfwGetTime();
+            float delta = timer.getDelta();
+
+            update(delta);
+            render();
 
             GLFW.glfwSwapBuffers(window);
             //GLFW.glfwWaitEvents();
@@ -136,7 +182,43 @@ public class WindowView {
         }
     }
 
-    private void cleanUp(){
+    private void update(float delta){
+        angle += delta * anglePerSecond;
+    }
 
+    private void render(){
+        clear();
+
+        if (renderWireframe) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+
+        //Matrix4f model = new Matrix4f().rotate(angle, 0f, 0f, 1f);
+        //MemoryStack stack = MemoryStack.stackPush();
+        //FloatBuffer fb = stack.mallocFloat(16);
+        //model.get(fb);
+        //GL20.glUniformMatrix4fv(uniformModel, false, fb);
+
+        //GL20.glDrawElements(GL_TRIANGLES, mesh.getVertexID(), GL_UNSIGNED_INT, 0);
+        GL20.glDrawArrays(GL11.GL_TRIANGLES, 0, 3);
+
+        GL20.glDisableVertexAttribArray(0);
+        GL30.glBindVertexArray(0);
+    }
+
+    private void clear(){
+        GL20.glClear(GL20.GL_COLOR_BUFFER_BIT|GL20.GL_DEPTH_BUFFER_BIT);
+    }
+
+    private void cleanUp(){
+        MeshLoader.cleanup();
+        shaderProgram.cleanup();
+
+        GLFW.glfwDestroyWindow(window);
+        Callbacks.glfwFreeCallbacks(window);
+        GLFW.glfwTerminate();
+        errorCallback.free();
+
+        System.out.println("Cleanup Success");
     }
 }
