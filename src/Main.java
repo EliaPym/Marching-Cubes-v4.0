@@ -1,7 +1,12 @@
+import data.DataLoader;
+import data.MarchingCubes;
 import renderEngine.WindowView;
 
+import java.io.IOException;
+import java.util.Arrays;
+
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         WindowView window = new WindowView(640, 480, "Marching Cubes v4.0 - DEMO");
 
         float[] cubeVertices = {
@@ -50,7 +55,16 @@ public class Main {
             cubeColours[i * 9 + 8] = 1f; // B
         }
 
-        window.data(cubeVertices, cubeTriangles, cubeColours);
-        window.run();
+        String dir = "E:\\GitHub\\Marching-Cubes-v4.0\\TestData";
+        DataLoader.Data[][][] data = DataLoader.getData(dir);
+
+        MarchingCubes.generateVertices(data);
+        float[] vertices = MarchingCubes.getVertices();
+        int[] indices = MarchingCubes.getIndices();
+
+        //window.data(vertices, indices, null);
+        //window.data(cubeVertices, cubeTriangles, cubeColours);
+
+        //window.run();
     }
 }
