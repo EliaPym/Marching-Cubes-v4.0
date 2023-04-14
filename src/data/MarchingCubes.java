@@ -4,17 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MarchingCubes extends DataLoader{
-    private static float isoLevel = 0.5f;
-
-    private static int width;
-    private static int height;
-    private static int depth;
+    private static final float isoLevel = 0.5f;
 
     private static final int[] edgeTable = TriangulationTable.getEdgeTable();
     private static final int[][] triTable = TriangulationTable.getTriTable();
 
-    private static ArrayList<Float> vertices = new ArrayList<>();
-    private static ArrayList<Integer> indices = new ArrayList<>();
+    private static final ArrayList<Float> vertices = new ArrayList<>();
+    private static final ArrayList<Integer> indices = new ArrayList<>();
 
     public static void generateVertices(Data[][][] data){
         int vertexCount = 0;
@@ -37,13 +33,13 @@ public class MarchingCubes extends DataLoader{
                         dp6 = data[x + 1][y + 1][z + 1];
                         dp7 = data[x + 1][y + 1][z    ];
 
-                        if (dp0.val < isoLevel) { edgeIndex += 1; }
-                        if (dp1.val < isoLevel) { edgeIndex += 2; }
-                        if (dp2.val < isoLevel) { edgeIndex += 4; }
-                        if (dp3.val < isoLevel) { edgeIndex += 8; }
-                        if (dp4.val < isoLevel) { edgeIndex += 16; }
-                        if (dp5.val < isoLevel) { edgeIndex += 32; }
-                        if (dp6.val < isoLevel) { edgeIndex += 64; }
+                        if (dp0.val < isoLevel) { edgeIndex +=   1; }
+                        if (dp1.val < isoLevel) { edgeIndex +=   2; }
+                        if (dp2.val < isoLevel) { edgeIndex +=   4; }
+                        if (dp3.val < isoLevel) { edgeIndex +=   8; }
+                        if (dp4.val < isoLevel) { edgeIndex +=  16; }
+                        if (dp5.val < isoLevel) { edgeIndex +=  32; }
+                        if (dp6.val < isoLevel) { edgeIndex +=  64; }
                         if (dp7.val < isoLevel) { edgeIndex += 128; }
 
                         if ((edgeTable[edgeIndex] & 1) == 1){
