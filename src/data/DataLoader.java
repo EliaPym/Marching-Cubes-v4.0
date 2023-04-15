@@ -2,9 +2,7 @@ package data;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 
 public class DataLoader {
 
@@ -36,7 +34,7 @@ public class DataLoader {
     private static File[] slices;
 
     public static Data[][][] getData(String dir) throws IOException {
-        directory = new File(dir);
+        directory = new File(System.getProperty("user.dir") + File.separator + dir);
         slices = getSlices();
         generateData();
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MarchingCubes extends DataLoader{
-    private static final float isoLevel = 0.5f;
+    private static final float isoLevel = 0.9f;
 
     private static final int[] edgeTable = TriangulationTable.getEdgeTable();
     private static final int[][] triTable = TriangulationTable.getTriTable();
@@ -99,7 +99,19 @@ public class MarchingCubes extends DataLoader{
     }
 
     private static Vertex VertexInterpolation(Data p1, Data p2){
-        double mu = (isoLevel - p1.val) / (p2.val - p1.val);
+        double mu;
+
+        if (Math.abs(isoLevel - p1.val) < 0.00001){
+            return p1.pos;
+        }
+        if (Math.abs(isoLevel - p2.val) < 0.00001){
+            return p2.pos;
+        }
+        if (Math.abs(p1.val - p2.val) < 0.00001){
+            return p1.pos;
+        }
+
+        mu = (isoLevel - p1.val) / (p2.val - p1.val);
 
         float x = (float)(p1.pos.x + mu * (p2.pos.x - p1.pos.x));
         float y = (float)(p1.pos.y + mu * (p2.pos.y - p1.pos.y));

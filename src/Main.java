@@ -55,12 +55,16 @@ public class Main {
             cubeColours[i * 9 + 8] = 1f; // B
         }
 
-        String dir = "E:\\GitHub\\Marching-Cubes-v4.0\\TestData";
+        String dir = "TestData";
         DataLoader.Data[][][] data = DataLoader.getData(dir);
 
         MarchingCubes.generateVertices(data);
         float[] vertices = MarchingCubes.getVertices();
         int[] indices = MarchingCubes.getIndices();
+
+        System.out.println(Arrays.toString(vertices));
+        System.out.println(Arrays.toString(indices));
+        System.out.printf("Vertices: %d%n", vertices.length);
 
         //window.data(vertices, indices, null);
         //window.data(cubeVertices, cubeTriangles, cubeColours);
