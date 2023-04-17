@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MarchingCubes extends DataLoader{
-    private static final float isoLevel = 0.1f;
+    private static final float isoLevel = 0.13f;
 
     private static final int[] edgeTable = TriangulationTable.getEdgeTable();
     private static final int[][] triTable = TriangulationTable.getTriTable();
@@ -12,7 +12,12 @@ public class MarchingCubes extends DataLoader{
     private static final ArrayList<Float> vertices = new ArrayList<>();
     private static final ArrayList<Integer> indices = new ArrayList<>();
 
-    public static void generateVertices(Data[][][] data){
+    private static Data[][][] data;
+
+    public static void generateVertices(Data[][][] in_data){
+        data = in_data;
+        normaliseVertices();
+
         int vertexCount = 0;
 
         for (int x = 0; x < data.length - 1; x++){
@@ -79,6 +84,7 @@ public class MarchingCubes extends DataLoader{
                             vertList[11] = VertexInterpolation(dp3, dp7);
                         }
 
+                        int triCount = 0;
                         for (int i = 0; triTable[edgeIndex][i] != -1; i++){
                             Vertex v = vertList[triTable[edgeIndex][i]];
 
@@ -86,8 +92,17 @@ public class MarchingCubes extends DataLoader{
                             vertices.add(v.y);
                             vertices.add(v.z);
 
-                            indices.add(vertexCount);
-                            vertexCount++;
+                            triCount++;
+
+                            if (triCount == 3){
+                                indices.add(vertexCount + 2);
+                                indices.add(vertexCount + 1);
+                                indices.add(vertexCount);
+
+                                vertexCount += 3;
+
+                                triCount = 0;
+                            }
                         }
 
                     } catch(Exception e){
@@ -101,15 +116,15 @@ public class MarchingCubes extends DataLoader{
     private static Vertex VertexInterpolation(Data p1, Data p2){
         double mu;
 
-        if (Math.abs(isoLevel - p1.val) < 0.00001){
-            return p1.pos;
-        }
-        if (Math.abs(isoLevel - p2.val) < 0.00001){
-            return p2.pos;
-        }
-        if (Math.abs(p1.val - p2.val) < 0.00001){
-            return p1.pos;
-        }
+        //if (Math.abs(isoLevel - p1.val) < 0.00001){
+        //    return p1.pos;
+        //}
+        //if (Math.abs(isoLevel - p2.val) < 0.00001){
+        //    return p2.pos;
+        //}
+        //if (Math.abs(p1.val - p2.val) < 0.00001){
+        //    return p1.pos;
+        //}
 
         mu = (isoLevel - p1.val) / (p2.val - p1.val);
 
@@ -118,6 +133,39 @@ public class MarchingCubes extends DataLoader{
         float z = -(float)(p1.pos.z + mu * (p2.pos.z - p1.pos.z));
 
         return new Vertex(x, y, z);
+    }
+
+    private static void normaliseVertices(){
+        float max_x = 0;
+        float max_y = 0;
+        float max_z = 0;
+
+        for (int x = 0; x < data.length; x++){
+            for (int y = 0; y < data[0].length; y++){
+                for (int z = 0; z < data[1].length; z++) {
+                    if (data[x][y][z].pos.x > max_x){
+                        max_x = data[x][y][z].pos.x;
+                    }
+                    if (data[x][y][z].pos.y > max_y){
+                        max_y = data[x][y][z].pos.y;
+                    }
+                    if (data[x][y][z].pos.z > max_z){
+                        max_z = data[x][y][z].pos.z;
+                    }
+                }
+            }
+        }
+        System.out.printf("MAX_X: %f | MAX_Y: %f | MAX_Z: %f%n", max_x, max_y, max_z);
+
+        for (int x = 0; x < data.length; x++) {
+            for (int y = 0; y < data[0].length; y++) {
+                for (int z = 0; z < data[1].length; z++) {
+                    data[x][y][z].pos.x = data[x][y][z].pos.x - (max_x / 2);
+                    data[x][y][z].pos.y = data[x][y][z].pos.y - (max_y / 2);
+                    data[x][y][z].pos.z = data[x][y][z].pos.z - (max_z / 2);
+                }
+            }
+        }
     }
 
     public static float[] getVertices(){
@@ -134,5 +182,17 @@ public class MarchingCubes extends DataLoader{
             arr[i] = indices.get(i);
         }
         return arr;
+    }
+
+    public static int getWidth(){
+        return data.length;
+    }
+
+    public static int getHeight(){
+        return data[0].length;
+    }
+
+    public static int getDepth(){
+        return data[1].length;
     }
 }

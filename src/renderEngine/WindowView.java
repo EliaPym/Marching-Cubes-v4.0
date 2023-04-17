@@ -34,12 +34,12 @@ public class WindowView {
     private float[] colours;
 
     // translation
-    float posX = -25f;
+    float posX = 0f;
     float posY = 0f;
     float posZ = -10f;
     // rotation
-    float axisX = 1f;
-    float axisY = 0f;
+    float axisX = 0f;
+    float axisY = 1f;
     float axisZ = 0f;
     // scaling
     float scaleX = 1f;
@@ -69,6 +69,10 @@ public class WindowView {
         this.vertices = vertices;
         this.indices = indices;
         this.colours = colours;
+    }
+
+    public void setPos(int z){
+        this.posZ = -z * 1.5f;
     }
 
     public void run(){
@@ -158,7 +162,7 @@ public class WindowView {
             viewMatrix = new Matrix4f().lookAt(
                     new Vector3f(0, 0, 0),  // camera position
                     new Vector3f(0, 0, -1), // camera look direction
-                    new Vector3f(0, 1, 0)   // camera up direction
+                    new Vector3f(0, -1, 0)   // camera up direction
             );
 
             timer.init();

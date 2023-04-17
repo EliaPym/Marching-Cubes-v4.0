@@ -1,6 +1,7 @@
 package data;
 
 import javax.imageio.ImageIO;
+import java.awt.desktop.SystemSleepEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -36,6 +37,9 @@ public class DataLoader {
     public static Data[][][] getData(String dir) throws IOException {
         directory = new File(System.getProperty("user.dir") + File.separator + dir);
         slices = getSlices();
+        for (File i : slices){
+            System.out.println(i.getName());
+        }
         generateData();
 
         return data;
