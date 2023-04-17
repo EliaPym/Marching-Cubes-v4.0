@@ -1,16 +1,12 @@
 package renderEngine;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryStack;
 
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -22,20 +18,44 @@ public class WindowView {
     private static long window;
     private static Mesh mesh;
 
+    private static Matrix4f projectionMatrix;
+    private static Matrix4f modelMatrix;
+    private static Matrix4f viewMatrix;
+    private static Matrix4f translationMatrix;
+    private static Matrix4f rotationMatrix;
+    private static Matrix4f scalingMatrix;
+    private static final float FOV = (float) Math.toRadians(60.0f);
+    private static final float Z_NEAR = 0.01f;
+    private static final float Z_FAR = 1000.0f;
+    private float aspectRatio;
+
     private float[] vertices;
     private int[] indices;
     private float[] colours;
 
+    // translation
+    float posX = -25f;
+    float posY = 0f;
+    float posZ = -10f;
+    // rotation
+    float axisX = 1f;
+    float axisY = 0f;
+    float axisZ = 0f;
+    // scaling
+    float scaleX = 1f;
+    float scaleY = 1f;
+    float scaleZ = 1f;
+
     private int uniformModel;
     private float angle = 0f;
-    private float anglePerSecond = 50f;
-    private Timer timer;
+    private final float anglePerSecond = 50f;
+    private final Timer timer;
 
     private static GLFWErrorCallback errorCallback;
     private static GLFWKeyCallback keyCallback;
     private static ShaderProgram shaderProgram;
 
-    public static boolean renderWireframe = false;
+    public static boolean renderWireframe;
 
     public WindowView(int width, int height, String title){
         windowWidth = width;
@@ -125,17 +145,38 @@ public class WindowView {
             // enable v-sync
             GLFW.glfwSwapInterval(1);
             GLFW.glfwShowWindow(window);
+
+            aspectRatio = (float) pWidth.get(0) / (float) pHeight.get(0);
+            projectionMatrix = new Matrix4f().perspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
+
+            translationMatrix = new Matrix4f().translation(0, 0, -5);
+            scalingMatrix = new Matrix4f().scaling(1, 1, 1);
+            rotationMatrix = new Matrix4f().rotation(0, 1, 1, 1);
+
+            modelMatrix = new Matrix4f().identity();
+
+            viewMatrix = new Matrix4f().lookAt(
+                    new Vector3f(0, 0, 0),  // camera position
+                    new Vector3f(0, 0, -1), // camera look direction
+                    new Vector3f(0, 1, 0)   // camera up direction
+            );
+
+            timer.init();
         }
+
+        GL11.glEnable(GL_DEPTH_TEST);
+        GL11.glDepthFunc(GL11.GL_LESS);
+        GL11.glEnable(GL_CULL_FACE);
     }
 
     private void setupShader() throws Exception {
         shaderProgram = new ShaderProgram();
         System.out.println("Shader Program created");
 
-        String vertexShader = "#version 150 core\n" +
+        String vertexShader = "#version 330\n" +
                 "\n" +
-                "in vec3 position;\n" +
-                "in vec3 colour;\n" +
+                "layout (location=0) in vec3 position;\n" +
+                "layout (location=1) in vec3 colour;\n" +
                 "\n" +
                 "out vec3 vertexColour;\n" +
                 "\n" +
@@ -148,7 +189,7 @@ public class WindowView {
                 "    mat4 pvm = projection * view * model;\n" +
                 "    gl_Position = pvm * vec4(position, 1.0);\n" +
                 "}";
-        String fragmentShader = "#version 150 core\n" +
+        String fragmentShader = "#version 330\n" +
                 "\n" +
                 "in vec3 vertexColour;\n" +
                 "\n" +
@@ -170,7 +211,6 @@ public class WindowView {
 
     private void loop(){
         while (!GLFW.glfwWindowShouldClose(window)){
-            //double time = GLFW.glfwGetTime();
             float delta = timer.getDelta();
 
             update(delta);
@@ -183,6 +223,9 @@ public class WindowView {
     }
 
     private void update(float delta){
+        if (angle > 360) {
+            angle = 0;
+        }
         angle += delta * anglePerSecond;
     }
 
@@ -193,14 +236,27 @@ public class WindowView {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
 
-        //Matrix4f model = new Matrix4f().rotate(angle, 0f, 0f, 1f);
-        //MemoryStack stack = MemoryStack.stackPush();
-        //FloatBuffer fb = stack.mallocFloat(16);
-        //model.get(fb);
-        //GL20.glUniformMatrix4fv(uniformModel, false, fb);
+        modelMatrix = new Matrix4f().identity();
 
-        //GL20.glDrawElements(GL_TRIANGLES, mesh.getVertexID(), GL_UNSIGNED_INT, 0);
-        GL20.glDrawArrays(GL11.GL_TRIANGLES, 0, 3);
+        //System.out.println(angle);
+        translationMatrix = new Matrix4f().translation(posX, posY, posZ);
+
+        rotationMatrix = new Matrix4f().rotate((float)Math.toRadians(angle * axisX), 1f, 0f, 0f); // rotate along x-axis
+        rotationMatrix = rotationMatrix.rotate((float)Math.toRadians(angle * axisY), 0f, 1f, 0f); // rotate along y-axis
+        rotationMatrix = rotationMatrix.rotate((float)Math.toRadians(angle * axisZ), 0f, 0f, 1f); // rotate along z-axis
+        scalingMatrix = new Matrix4f().scaling(scaleX, scaleY, scaleZ);
+
+        //modelMatrix = modelMatrix.mul(scalingMatrix).mul(translationMatrix).mul(rotationMatrix);
+        modelMatrix = modelMatrix.mul(translationMatrix).mul(rotationMatrix).mul(scalingMatrix);
+
+        shaderProgram.setUniform("projection", projectionMatrix);
+        shaderProgram.setUniform("view", viewMatrix);
+        shaderProgram.setUniform("model", modelMatrix);
+
+        GL30.glBindVertexArray(mesh.getVaoID());
+        GL20.glEnableVertexAttribArray(0);
+        GL20.glEnableVertexAttribArray(1);
+        GL20.glDrawElements(GL_TRIANGLES, mesh.getVertexID(), GL_UNSIGNED_INT, 0);
 
         GL20.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);

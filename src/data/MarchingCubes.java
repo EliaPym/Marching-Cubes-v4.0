@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MarchingCubes extends DataLoader{
-    private static final float isoLevel = 0.9f;
+    private static final float isoLevel = 0.1f;
 
     private static final int[] edgeTable = TriangulationTable.getEdgeTable();
     private static final int[][] triTable = TriangulationTable.getTriTable();

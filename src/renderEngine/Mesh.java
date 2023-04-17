@@ -10,7 +10,7 @@ public class Mesh {
         vaoID = vao;
         vboID = vbo;
         iboID = ibo;
-        vertexID= vertex;
+        vertexID = vertex;
     }
 
     public int getVaoID(){

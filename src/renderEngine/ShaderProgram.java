@@ -6,14 +6,17 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL20.glDeleteProgram;
+import static org.lwjgl.opengl.GL20.*;
 
 public class ShaderProgram {
     private final int programID;
     private int vertexShaderID;
     private int fragmentShaderID;
+    private final Map<String, Integer> uniforms;
 
     public ShaderProgram() throws Exception {
         programID = GL20.glCreateProgram();
@@ -22,6 +25,8 @@ public class ShaderProgram {
         if (programID == 0){
             throw new Exception("could not create Shader");
         }
+
+        uniforms = new HashMap<>();
     }
 
     public void createVertexShader(String shaderCode){
@@ -31,7 +36,7 @@ public class ShaderProgram {
 
     public void createFragmentShader(String shaderCode){
         fragmentShaderID = createShader(shaderCode, GL20.GL_FRAGMENT_SHADER);
-        GL30.glBindFragDataLocation(programID, 0, "fragColour");
+        //GL30.glBindFragDataLocation(programID, 0, "fragColour");
         System.out.println("Fragment Shader created");
     }
 
@@ -61,19 +66,29 @@ public class ShaderProgram {
             throw new RuntimeException("Error linking shader code: " + GL20.glGetProgramInfoLog(programID));
         }
 
-        int floatSize = 4;
+        if (vertexShaderID != 0){
+            glDetachShader(programID, vertexShaderID);
+        }
 
-        int posAttrib = GL20.glGetAttribLocation(programID, "position");
-        GL20.glEnableVertexAttribArray(posAttrib);
-        GL20.glVertexAttribPointer(posAttrib, 3, GL_FLOAT, false, 6 * floatSize, 0);
+        if (fragmentShaderID != 0){
+            glDetachShader(programID, fragmentShaderID);
+        }
 
-        int colAttrib = GL20.glGetAttribLocation(programID, "colour");
-        GL20.glEnableVertexAttribArray(colAttrib);
-        GL20.glVertexAttribPointer(colAttrib, 3, GL_FLOAT, false, 6 * floatSize, 3 * floatSize);
+        glValidateProgram(programID);
+        if (glGetProgrami(programID, GL_VALIDATE_STATUS) == 0){
+            System.err.println("Warning validating shader code: " + glGetProgramInfoLog(programID));
+        }
     }
 
     public void createUniform(String uniformName){
-        try (MemoryStack stack = MemoryStack.stackPush()) {
+        int uniformLocation = glGetUniformLocation(programID, uniformName);
+
+        if (uniformLocation < 0){
+            throw new RuntimeException("Could not find uniform: " + uniformName);
+        }
+
+        uniforms.put(uniformName, uniformLocation);
+        /*try (MemoryStack stack = MemoryStack.stackPush()) {
             int uniform = GL20.glGetUniformLocation(programID, uniformName);
             Matrix4f mat4 = new Matrix4f();
             FloatBuffer fb = stack.mallocFloat(16);
@@ -81,12 +96,24 @@ public class ShaderProgram {
             if (uniformName.equals("projection")) {
                 float ratio = 640f / 480f;
                 // this might be wrong since Matrix4f.orthographic() has been deprecated
-                mat4 = new Matrix4f().ortho(-ratio, ratio, -1f, 1f, -1f, 1f);
+                //mat4 = new Matrix4f().ortho(-ratio, ratio, -1f, 1f, -1f, 1f);
+                mat4 = new Matrix4f().perspective(60, ratio, -1f, 1000f);
             }
 
             // this might be wrong since .getBuffer() has been deprecated
             mat4.get(fb);
             GL20.glUniformMatrix4fv(uniform, false, fb);
+        }*/
+    }
+
+    public void setUniform(String uniformName, Matrix4f value){
+        try (MemoryStack stack = MemoryStack.stackPush()){
+            FloatBuffer fb = stack.mallocFloat(16);
+            value.get(fb);
+            glUniformMatrix4fv(uniforms.get(uniformName), false, value.get(new float[16]));
+        } catch (Exception e){
+            System.err.println("Failed to set uniform for: " + uniformName);
+            e.printStackTrace();
         }
     }
 
@@ -96,6 +123,10 @@ public class ShaderProgram {
 
     public void unbind(){
         GL20.glUseProgram(0);
+    }
+
+    public int getProgramID(){
+        return programID;
     }
 
     public void cleanup(){
