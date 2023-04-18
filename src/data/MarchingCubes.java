@@ -22,7 +22,7 @@ public class MarchingCubes extends DataLoader{
 
         for (int x = 0; x < data.length - 1; x++){
             for (int y = 0; y < data[0].length - 1; y++){
-                for (int z = 0; z < data[1].length - 1; z++){
+                for (int z = 0; z < data[0][0].length - 1; z++){
                     try{
                         int edgeIndex = 0;
                         Vertex[] vertList = new Vertex[12];
@@ -136,13 +136,11 @@ public class MarchingCubes extends DataLoader{
     }
 
     private static void normaliseVertices(){
-        float max_x = 0;
-        float max_y = 0;
-        float max_z = 0;
+        float max_x = 0, max_y = 0, max_z = 0;
 
         for (int x = 0; x < data.length; x++){
             for (int y = 0; y < data[0].length; y++){
-                for (int z = 0; z < data[1].length; z++) {
+                for (int z = 0; z < data[0][0].length; z++) {
                     if (data[x][y][z].pos.x > max_x){
                         max_x = data[x][y][z].pos.x;
                     }
@@ -159,7 +157,7 @@ public class MarchingCubes extends DataLoader{
 
         for (int x = 0; x < data.length; x++) {
             for (int y = 0; y < data[0].length; y++) {
-                for (int z = 0; z < data[1].length; z++) {
+                for (int z = 0; z < data[0][0].length; z++) {
                     data[x][y][z].pos.x = data[x][y][z].pos.x - (max_x / 2);
                     data[x][y][z].pos.y = data[x][y][z].pos.y - (max_y / 2);
                     data[x][y][z].pos.z = data[x][y][z].pos.z - (max_z / 2);

@@ -56,6 +56,7 @@ public class DataLoader {
         BufferedImage tempImage = ImageIO.read(slices[0]);
         int width = tempImage.getWidth();
         int depth = tempImage.getHeight();
+        System.out.printf("Width: %d | Height: %d | Depth: %d%n", width, height, depth);
 
         data = new Data[width][height][depth];
 
