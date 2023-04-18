@@ -173,28 +173,11 @@ public class MarchingCubes extends DataLoader{
         Vector3f o = new Vector3f(0, 0, 0);
         for (int i = 0; i < (vertices.size() + 1) / 3; i++){
             Vector3f v = new Vector3f(vertices.get(i * 3), vertices.get(i * 3 + 1), vertices.get(i * 3 + 2));
-            //Vector3f d = new Vector3f(v.x - o.x, v.y - o.y, v.z - o.z);
+
             normals.add(v.x - o.x);
             normals.add(v.y - o.y);
             normals.add(v.z - o.z);
         }
-        /*
-        System.out.println(vertices.size());
-        for (int i = 0; i < (vertices.size() + 1) / 9; i++){
-            Vector3f v0 = new Vector3f(vertices.get(i * 9), vertices.get(i * 9 + 1), vertices.get(i * 9 + 2));
-            Vector3f v1 = new Vector3f(vertices.get(i * 9 + 3), vertices.get(i * 9 + 4), vertices.get(i * 9 + 5));
-            Vector3f v2 = new Vector3f(vertices.get(i * 9 + 6), vertices.get(i * 9 + 7), vertices.get(i * 9 + 8));
-
-            Vector3f v1v0 = new Vector3f((v1.x - v0.x), (v1.y - v0.y), (v1.z - v0.z));
-            Vector3f v2v0 = new Vector3f((v2.x - v0.x), (v2.y - v0.y), (v2.z - v0.z));
-
-            Vector3f n = new Vector3f().cross(v1v0, v2v0);
-
-            normals.add(n.x);
-            normals.add(n.y);
-            normals.add(n.z);
-        }
-         */
     }
 
     public static float[] getVertices(){

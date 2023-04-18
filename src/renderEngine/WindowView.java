@@ -8,6 +8,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.File;
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -22,6 +23,7 @@ public class WindowView {
     private static String windowTitle;
     private static long window;
     private static Mesh mesh;
+    private static InputHandler inputHandler;
 
     private static Matrix4f projectionMatrix;
     private static Matrix4f modelMatrix;
@@ -101,6 +103,7 @@ public class WindowView {
         }
 
         createWindow();
+        inputHandler = new InputHandler(window);
         mesh = MeshLoader.createMesh(vertices, indices, normals, colours);
         setupShader();
     }
@@ -207,6 +210,7 @@ public class WindowView {
             float delta = timer.getDelta();
 
             update(delta);
+            inputHandler.update();
             render();
 
             GLFW.glfwSwapBuffers(window);
