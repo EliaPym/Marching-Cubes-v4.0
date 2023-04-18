@@ -36,7 +36,6 @@ public class ShaderProgram {
 
     public void createFragmentShader(String shaderCode){
         fragmentShaderID = createShader(shaderCode, GL20.GL_FRAGMENT_SHADER);
-        //GL30.glBindFragDataLocation(programID, 0, "fragColour");
         System.out.println("Fragment Shader created");
     }
 
@@ -88,22 +87,6 @@ public class ShaderProgram {
         }
 
         uniforms.put(uniformName, uniformLocation);
-        /*try (MemoryStack stack = MemoryStack.stackPush()) {
-            int uniform = GL20.glGetUniformLocation(programID, uniformName);
-            Matrix4f mat4 = new Matrix4f();
-            FloatBuffer fb = stack.mallocFloat(16);
-
-            if (uniformName.equals("projection")) {
-                float ratio = 640f / 480f;
-                // this might be wrong since Matrix4f.orthographic() has been deprecated
-                //mat4 = new Matrix4f().ortho(-ratio, ratio, -1f, 1f, -1f, 1f);
-                mat4 = new Matrix4f().perspective(60, ratio, -1f, 1000f);
-            }
-
-            // this might be wrong since .getBuffer() has been deprecated
-            mat4.get(fb);
-            GL20.glUniformMatrix4fv(uniform, false, fb);
-        }*/
     }
 
     public void setUniform(String uniformName, Matrix4f value){

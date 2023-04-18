@@ -6,7 +6,11 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryStack;
 
+import java.io.File;
 import java.nio.IntBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -177,31 +181,8 @@ public class WindowView {
         shaderProgram = new ShaderProgram();
         System.out.println("Shader Program created");
 
-        String vertexShader = "#version 330\n" +
-                "\n" +
-                "layout (location=0) in vec3 position;\n" +
-                "layout (location=1) in vec3 colour;\n" +
-                "\n" +
-                "out vec3 vertexColour;\n" +
-                "\n" +
-                "uniform mat4 model;\n" +
-                "uniform mat4 view;\n" +
-                "uniform mat4 projection;\n" +
-                "\n" +
-                "void main(){\n" +
-                "    vertexColour = colour;\n" +
-                "    mat4 pvm = projection * view * model;\n" +
-                "    gl_Position = pvm * vec4(position, 1.0);\n" +
-                "}";
-        String fragmentShader = "#version 330\n" +
-                "\n" +
-                "in vec3 vertexColour;\n" +
-                "\n" +
-                "out vec4 fragColour;\n" +
-                "\n" +
-                "void main(){\n" +
-                "    fragColour = vec4(vertexColour, 1.0);\n" +
-                "}";
+        String vertexShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "src\\renderEngine\\VertexShader.glsl"), Charset.defaultCharset());
+        String fragmentShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "src\\renderEngine\\FragmentShader.glsl"), Charset.defaultCharset());
 
         shaderProgram.createVertexShader(vertexShader);
         shaderProgram.createFragmentShader(fragmentShader);

@@ -3,6 +3,7 @@ import data.MarchingCubes;
 import renderEngine.WindowView;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -62,17 +63,22 @@ public class Main {
         int[] indices = MarchingCubes.getIndices();
 
         float[] colours = new float[vertices.length * 3];
+        boolean coloured = false;
 
-        for (int i = 0; i < (colours.length+1) / 9; i++){
-            colours[i * 9    ] = 1f; // R
-            colours[i * 9 + 1] = 0f; // G
-            colours[i * 9 + 2] = 0f; // B
-            colours[i * 9 + 3] = 0f; // R
-            colours[i * 9 + 4] = 1f; // G
-            colours[i * 9 + 5] = 0f; // B
-            colours[i * 9 + 6] = 0f; // R
-            colours[i * 9 + 7] = 0f; // G
-            colours[i * 9 + 8] = 1f; // B
+        if (coloured) {
+            for (int i = 0; i < (colours.length + 1) / 9; i++) {
+                colours[i * 9] = 1f; // R
+                colours[i * 9 + 1] = 0f; // G
+                colours[i * 9 + 2] = 0f; // B
+                colours[i * 9 + 3] = 0f; // R
+                colours[i * 9 + 4] = 1f; // G
+                colours[i * 9 + 5] = 0f; // B
+                colours[i * 9 + 6] = 0f; // R
+                colours[i * 9 + 7] = 0f; // G
+                colours[i * 9 + 8] = 1f; // B
+            }
+        } else {
+            Arrays.fill(colours, 1.0f);
         }
 
         //colours = assignColorsToPolygons(vertices);
@@ -87,9 +93,7 @@ public class Main {
         WindowView.renderWireframe = false;
 
         window.data(vertices, indices, colours);
-        window.setPos(
-                MarchingCubes.getDepth()
-        );
+        window.setPos(MarchingCubes.getDepth());
         //window.data(cubeVertices, cubeTriangles, cubeColours);
 
         window.run();
