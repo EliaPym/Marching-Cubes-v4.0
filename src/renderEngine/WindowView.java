@@ -48,7 +48,7 @@ public class WindowView {
     float posZ = -10f;
     // rotation
     float axisX = 0f;
-    float axisY = 1f;
+    float axisY = 0f;
     float axisZ = 0f;
     // scaling
     float scaleX = 1f;
@@ -166,7 +166,7 @@ public class WindowView {
             aspectRatio = (float) pWidth.get(0) / (float) pHeight.get(0);
             projectionMatrix = new Matrix4f().perspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
 
-            translationMatrix = new Matrix4f().translation(0, 0, -5);
+            translationMatrix = new Matrix4f().translation(posX, posY, posZ);
             scalingMatrix = new Matrix4f().scaling(1, 1, 1);
             rotationMatrix = new Matrix4f().rotation(0, 1, 1, 1);
 
@@ -175,7 +175,7 @@ public class WindowView {
             viewMatrix = new Matrix4f().lookAt(
                     new Vector3f(0, 0, 0),  // camera position
                     new Vector3f(0, 0, -1), // camera look direction
-                    new Vector3f(0, -1, 0)   // camera up direction
+                    new Vector3f(0, 1, 0)   // camera up direction
             );
 
             timer.init();
@@ -235,12 +235,18 @@ public class WindowView {
 
         modelMatrix = new Matrix4f().identity();
 
-        translationMatrix = new Matrix4f().translation(posX, posY, posZ);
+        translationMatrix = new Matrix4f().translation(
+                inputHandler.getMoveX(),
+                inputHandler.getMoveY(),
+                inputHandler.getMoveZ() + posZ);
 
         rotationMatrix = new Matrix4f().rotate((float)Math.toRadians(angle * axisX), 1f, 0f, 0f); // rotate along x-axis
         rotationMatrix = rotationMatrix.rotate((float)Math.toRadians(angle * axisY), 0f, 1f, 0f); // rotate along y-axis
         rotationMatrix = rotationMatrix.rotate((float)Math.toRadians(angle * axisZ), 0f, 0f, 1f); // rotate along z-axis
-        scalingMatrix = new Matrix4f().scaling(scaleX, scaleY, scaleZ);
+        scalingMatrix = new Matrix4f().scaling(
+                inputHandler.getInputScroll() * scaleX,
+                inputHandler.getInputScroll() * scaleY,
+                inputHandler.getInputScroll() * scaleZ);
 
         modelMatrix = modelMatrix.mul(translationMatrix).mul(rotationMatrix).mul(scalingMatrix);
 
