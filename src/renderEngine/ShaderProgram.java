@@ -1,6 +1,8 @@
 package renderEngine;
 
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
@@ -95,6 +97,17 @@ public class ShaderProgram {
             value.get(fb);
             glUniformMatrix4fv(uniforms.get(uniformName), false, value.get(new float[16]));
         } catch (Exception e){
+            System.err.println("Failed to set uniform for: " + uniformName);
+            e.printStackTrace();
+        }
+    }
+
+    public void setUniform(String uniformName, Vector3f value){
+        try (MemoryStack stack = MemoryStack.stackPush()){
+            FloatBuffer fb = stack.mallocFloat(12);
+            value.get(fb);
+            glUniform3f(uniforms.get(uniformName), value.x, value.y, value.z);
+        } catch (Exception e) {
             System.err.println("Failed to set uniform for: " + uniformName);
             e.printStackTrace();
         }

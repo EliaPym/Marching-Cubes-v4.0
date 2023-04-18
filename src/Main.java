@@ -92,7 +92,10 @@ public class Main {
 
         WindowView.renderWireframe = false;
 
-        window.data(vertices, indices, colours);
+        float[] normals = MarchingCubes.getNormals();
+        System.out.printf("Normals: %d%n", normals.length);
+
+        window.data(vertices, indices, normals, colours);
         window.setPos(MarchingCubes.getDepth());
         //window.data(cubeVertices, cubeTriangles, cubeColours);
 

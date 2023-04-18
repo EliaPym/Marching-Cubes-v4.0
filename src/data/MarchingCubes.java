@@ -1,5 +1,7 @@
 package data;
 
+import org.joml.Vector3f;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,6 +13,7 @@ public class MarchingCubes extends DataLoader{
 
     private static final ArrayList<Float> vertices = new ArrayList<>();
     private static final ArrayList<Integer> indices = new ArrayList<>();
+    private static final ArrayList<Float> normals = new ArrayList<>();
 
     private static Data[][][] data;
 
@@ -100,7 +103,6 @@ public class MarchingCubes extends DataLoader{
                                 indices.add(vertexCount);
 
                                 vertexCount += 3;
-
                                 triCount = 0;
                             }
                         }
@@ -111,6 +113,7 @@ public class MarchingCubes extends DataLoader{
                 }
             }
         }
+        calculateNormals();
     }
 
     private static Vertex VertexInterpolation(Data p1, Data p2){
@@ -166,9 +169,37 @@ public class MarchingCubes extends DataLoader{
         }
     }
 
+    private static void calculateNormals(){
+        Vector3f o = new Vector3f(0, 0, 0);
+        for (int i = 0; i < (vertices.size() + 1) / 3; i++){
+            Vector3f v = new Vector3f(vertices.get(i * 3), vertices.get(i * 3 + 1), vertices.get(i * 3 + 2));
+            //Vector3f d = new Vector3f(v.x - o.x, v.y - o.y, v.z - o.z);
+            normals.add(v.x - o.x);
+            normals.add(v.y - o.y);
+            normals.add(v.z - o.z);
+        }
+        /*
+        System.out.println(vertices.size());
+        for (int i = 0; i < (vertices.size() + 1) / 9; i++){
+            Vector3f v0 = new Vector3f(vertices.get(i * 9), vertices.get(i * 9 + 1), vertices.get(i * 9 + 2));
+            Vector3f v1 = new Vector3f(vertices.get(i * 9 + 3), vertices.get(i * 9 + 4), vertices.get(i * 9 + 5));
+            Vector3f v2 = new Vector3f(vertices.get(i * 9 + 6), vertices.get(i * 9 + 7), vertices.get(i * 9 + 8));
+
+            Vector3f v1v0 = new Vector3f((v1.x - v0.x), (v1.y - v0.y), (v1.z - v0.z));
+            Vector3f v2v0 = new Vector3f((v2.x - v0.x), (v2.y - v0.y), (v2.z - v0.z));
+
+            Vector3f n = new Vector3f().cross(v1v0, v2v0);
+
+            normals.add(n.x);
+            normals.add(n.y);
+            normals.add(n.z);
+        }
+         */
+    }
+
     public static float[] getVertices(){
         float[] arr = new float[vertices.size()];
-        for(int i = 0; i < vertices.size(); i++){
+        for (int i = 0; i < vertices.size(); i++){
             arr[i] = vertices.get(i);
         }
         return arr;
@@ -176,8 +207,16 @@ public class MarchingCubes extends DataLoader{
 
     public static int[] getIndices(){
         int[] arr = new int[indices.size()];
-        for(int i = 0; i < indices.size(); i++){
+        for (int i = 0; i < indices.size(); i++){
             arr[i] = indices.get(i);
+        }
+        return arr;
+    }
+
+    public static float[] getNormals(){
+        float[] arr = new float[normals.size()];
+        for (int i = 0; i < normals.size(); i++){
+            arr[i] = normals.get(i);
         }
         return arr;
     }
@@ -191,6 +230,6 @@ public class MarchingCubes extends DataLoader{
     }
 
     public static int getDepth(){
-        return data[1].length;
+        return data[0][0].length;
     }
 }

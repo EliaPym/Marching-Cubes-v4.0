@@ -1,5 +1,6 @@
 package renderEngine;
 
+import data.DataLoader;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.*;
@@ -28,6 +29,7 @@ public class WindowView {
     private static Matrix4f translationMatrix;
     private static Matrix4f rotationMatrix;
     private static Matrix4f scalingMatrix;
+    private static final Vector3f lightPos = new Vector3f(-100f, -100f, 0);
     private static final float FOV = (float) Math.toRadians(60.0f);
     private static final float Z_NEAR = 0.01f;
     private static final float Z_FAR = 1000.0f;
@@ -35,6 +37,7 @@ public class WindowView {
 
     private float[] vertices;
     private int[] indices;
+    private float[] normals;
     private float[] colours;
 
     // translation
@@ -50,7 +53,6 @@ public class WindowView {
     float scaleY = 1f;
     float scaleZ = 1f;
 
-    private int uniformModel;
     private float angle = 0f;
     private final float anglePerSecond = 50f;
     private final Timer timer;
@@ -69,14 +71,15 @@ public class WindowView {
         timer = new Timer();
     }
 
-    public void data(float[] vertices, int[] indices, float[] colours){
+    public void data(float[] vertices, int[] indices, float[] normals, float[] colours){
         this.vertices = vertices;
         this.indices = indices;
+        this.normals = normals;
         this.colours = colours;
     }
 
     public void setPos(int z){
-        this.posZ = -z * 1.5f;
+        this.posZ = -z * 0.8f;
     }
 
     public void run(){
@@ -98,7 +101,7 @@ public class WindowView {
         }
 
         createWindow();
-        mesh = MeshLoader.createMesh(vertices, indices, colours);
+        mesh = MeshLoader.createMesh(vertices, indices, normals, colours);
         setupShader();
     }
 
@@ -107,12 +110,15 @@ public class WindowView {
         GLFW.glfwDefaultWindowHints();
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
+
         // creates an OpenGL context of version 3.2
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+
         // select core functionality of OpenGL context
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
-        // OpenGL context is forwards compatible
+
+        // Enable forward compatibility for OpenGL context
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GLFW.GLFW_TRUE);
 
         // creates new GLFW window context
@@ -192,6 +198,8 @@ public class WindowView {
         shaderProgram.createUniform("model");
         shaderProgram.createUniform("view");
         shaderProgram.createUniform("projection");
+
+        shaderProgram.createUniform("lightPos");
     }
 
     private void loop(){
@@ -223,7 +231,6 @@ public class WindowView {
 
         modelMatrix = new Matrix4f().identity();
 
-        //System.out.println(angle);
         translationMatrix = new Matrix4f().translation(posX, posY, posZ);
 
         rotationMatrix = new Matrix4f().rotate((float)Math.toRadians(angle * axisX), 1f, 0f, 0f); // rotate along x-axis
@@ -231,16 +238,18 @@ public class WindowView {
         rotationMatrix = rotationMatrix.rotate((float)Math.toRadians(angle * axisZ), 0f, 0f, 1f); // rotate along z-axis
         scalingMatrix = new Matrix4f().scaling(scaleX, scaleY, scaleZ);
 
-        //modelMatrix = modelMatrix.mul(scalingMatrix).mul(translationMatrix).mul(rotationMatrix);
         modelMatrix = modelMatrix.mul(translationMatrix).mul(rotationMatrix).mul(scalingMatrix);
 
         shaderProgram.setUniform("projection", projectionMatrix);
         shaderProgram.setUniform("view", viewMatrix);
         shaderProgram.setUniform("model", modelMatrix);
 
+        shaderProgram.setUniform("lightPos", lightPos);
+
         GL30.glBindVertexArray(mesh.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
+        GL20.glEnableVertexAttribArray(2);
         GL20.glDrawElements(GL_TRIANGLES, mesh.getVertexID(), GL_UNSIGNED_INT, 0);
 
         GL20.glDisableVertexAttribArray(0);
@@ -253,7 +262,9 @@ public class WindowView {
 
     private void cleanUp(){
         MeshLoader.cleanup();
-        shaderProgram.cleanup();
+        if (shaderProgram != null) {
+            shaderProgram.cleanup();
+        }
 
         GLFW.glfwDestroyWindow(window);
         Callbacks.glfwFreeCallbacks(window);

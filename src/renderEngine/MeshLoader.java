@@ -13,13 +13,14 @@ public class MeshLoader {
     private static int vboID;
     private static int iboID;
 
-    public static Mesh createMesh(float[] vertices, int[] indices, float[] colours){
+    public static Mesh createMesh(float[] vertices, int[] indices, float[] normals, float[] colours){
         genVao();
-        genVbo(vertices);
+        genVbo(vertices, 0);
         genIbo(indices);
-        assignColours(colours);
+        genVbo(normals, 1);
+        genVbo(colours, 2);
 
-        return new Mesh(vaoID, vboID, iboID, indices.length);
+        return new Mesh(vaoID, indices.length);
     }
 
     private static void genVao(){
@@ -27,12 +28,12 @@ public class MeshLoader {
         GL30.glBindVertexArray(vaoID);
     }
 
-    private static void genVbo(float[] data){
+    private static void genVbo(float[] data, int index){
         try {
-            vboID = GL15.glGenBuffers();
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+            int vbo = GL15.glGenBuffers();
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
             GL15.glBufferData(GL15.GL_ARRAY_BUFFER, data, GL15.GL_STATIC_DRAW);
-            GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+            GL20.glVertexAttribPointer(index, 3, GL11.GL_FLOAT, false, 0, 0);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -46,13 +47,6 @@ public class MeshLoader {
         } catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    private static void assignColours(float[] data){
-        int colourVboID = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colourVboID);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, data, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(1, 3, GL15.GL_FLOAT, false, 0, 0);
     }
 
     public static void cleanup(){
