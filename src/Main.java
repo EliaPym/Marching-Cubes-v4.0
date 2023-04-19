@@ -4,8 +4,6 @@ import renderEngine.WindowView;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        WindowView window = new WindowView(640, 480, "Marching Cubes v4.0 - DEMO");
-
         String dir = "CT_Slices";
         DataLoader.Data[][][] data = DataLoader.getData(dir);
 
@@ -17,9 +15,9 @@ public class Main {
         float[] normals = MarchingCubes.getNormals();
         float [] colours = MarchingCubes.getColours();
 
+        WindowView window = new WindowView(640, 480, "Marching Cubes v4.0 - DEMO");
         window.data(vertices, indices, normals, colours);
         window.setPos(MarchingCubes.getWidth(), MarchingCubes.getHeight(), MarchingCubes.getDepth());
-
         window.run();
     }
 

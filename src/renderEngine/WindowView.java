@@ -55,11 +55,9 @@ public class WindowView {
     float scaleZ = 1f;
 
     private float angle = 0f;
-    private final float anglePerSecond = 50f;
     private final Timer timer;
 
     private static GLFWErrorCallback errorCallback;
-    private static GLFWKeyCallback keyCallback;
     private static ShaderProgram shaderProgram;
 
     public static boolean renderWireframe = false;
@@ -148,10 +146,10 @@ public class WindowView {
             throw new RuntimeException("Failed to create the GLFW window");
         }
 
-        keyCallback = new GLFWKeyCallback() {
+        GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS){
+                if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS) {
                     GLFW.glfwSetWindowShouldClose(window, true);
                 }
             }
@@ -240,6 +238,7 @@ public class WindowView {
         if (angle > 360) {
             angle = 0;
         }
+        float anglePerSecond = 50f;
         angle += delta * anglePerSecond;
 
         if (inputHandler.getLeftButtonDown()) {
