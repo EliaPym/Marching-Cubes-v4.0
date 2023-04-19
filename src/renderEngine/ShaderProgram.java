@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL20.*;
 
 public class ShaderProgram {
-    private final int programID;
+    private static int programID;
     private int vertexShaderID;
     private int fragmentShaderID;
     private final Map<String, Integer> uniforms;
@@ -121,7 +121,7 @@ public class ShaderProgram {
         GL20.glUseProgram(0);
     }
 
-    public int getProgramID(){
+    public static int getProgramID(){
         return programID;
     }
 

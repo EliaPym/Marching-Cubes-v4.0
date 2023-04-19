@@ -2,30 +2,23 @@ import data.DataLoader;
 import data.MarchingCubes;
 import renderEngine.WindowView;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 public class Main {
     public static void main(String[] args) throws Exception {
         WindowView window = new WindowView(640, 480, "Marching Cubes v4.0 - DEMO");
 
-        String dir = "temp";
+        String dir = "CT_Slices";
         DataLoader.Data[][][] data = DataLoader.getData(dir);
 
+        MarchingCubes.enableColours = false;
         MarchingCubes.generateVertices(data);
+
         float[] vertices = MarchingCubes.getVertices();
         int[] indices = MarchingCubes.getIndices();
+        float[] normals = MarchingCubes.getNormals();
         float [] colours = MarchingCubes.getColours();
 
-        System.out.printf("Indices: %d%n", indices.length);
-        System.out.printf("Vertices: %d%n", vertices.length / 3);
-        System.out.printf("Polygons: %d%n", vertices.length / 9);
-
-        float[] normals = MarchingCubes.getNormals();
-        System.out.printf("Normals: %d%n", normals.length);
-
         window.data(vertices, indices, normals, colours);
-        window.setPos(MarchingCubes.getDepth());
+        window.setPos(MarchingCubes.getWidth(), MarchingCubes.getHeight(), MarchingCubes.getDepth());
 
         window.run();
     }

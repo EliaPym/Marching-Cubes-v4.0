@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class MarchingCubes extends DataLoader{
     private static final float isoLevel = 0.1f;
-    public static final boolean enableColours = false;
+    public static boolean enableColours = false;
 
     private static final int[] edgeTable = TriangulationTable.getEdgeTable();
     private static final int[][] triTable = TriangulationTable.getTriTable();
@@ -15,7 +15,7 @@ public class MarchingCubes extends DataLoader{
     private static final ArrayList<Float> vertices = new ArrayList<>();
     private static final ArrayList<Integer> indices = new ArrayList<>();
     private static final ArrayList<Float> normals = new ArrayList<>();
-    private static float[] colours;
+    private static ArrayList<Float> colours = new ArrayList<>();
 
     private static Data[][][] data;
 
@@ -116,6 +116,7 @@ public class MarchingCubes extends DataLoader{
             }
         }
         calculateNormals();
+        assignColours();
     }
 
     private static Vertex VertexInterpolation(Data p1, Data p2){
@@ -180,25 +181,41 @@ public class MarchingCubes extends DataLoader{
             normals.add(v.y - o.y);
             normals.add(v.z - o.z);
         }
+        /*
+        for (int i = 0; i < (vertices.size() + 1) / 9; i++){
+            Vector3f v0 = new Vector3f(vertices.get(i * 9    ), vertices.get(i * 9 + 1), vertices.get(i * 9 + 2));
+            Vector3f v1 = new Vector3f(vertices.get(i * 9 + 3), vertices.get(i * 9 + 4), vertices.get(i * 9 + 5));
+            Vector3f v2 = new Vector3f(vertices.get(i * 9 + 6), vertices.get(i * 9 + 7), vertices.get(i * 9 + 8));
+
+            Vector3f d = new Vector3f().cross(v1.sub(v0), v2.sub(v0));
+            Vector3f n = new Vector3f().normalize(d);
+
+            for (int j = 0; j < 3; j++) {
+                normals.add(n.x);
+                normals.add(n.y);
+                normals.add(n.z);
+            }
+        }
+        */
     }
 
     private static void assignColours(){
-        colours = new float[vertices.size() * 3];
-
         if (enableColours) {
-            for (int i = 0; i < (colours.length + 1) / 9; i++) {
-                colours[i * 9] = 1f; // R
-                colours[i * 9 + 1] = 0f; // G
-                colours[i * 9 + 2] = 0f; // B
-                colours[i * 9 + 3] = 0f; // R
-                colours[i * 9 + 4] = 1f; // G
-                colours[i * 9 + 5] = 0f; // B
-                colours[i * 9 + 6] = 0f; // R
-                colours[i * 9 + 7] = 0f; // G
-                colours[i * 9 + 8] = 1f; // B
+            for (int i = 0; i < (vertices.size() + 1) / 9; i++) {
+                colours.add(1f);  // R
+                colours.add(0f);  // G
+                colours.add(0f);  // B
+                colours.add(0f);  // R
+                colours.add(1f);  // G
+                colours.add(0f);  // B
+                colours.add(0f);  // R
+                colours.add(0f);  // G
+                colours.add(1f);  // B
             }
         } else {
-            Arrays.fill(colours, 1.0f);
+            for (int i = 0; i < vertices.size(); i++){
+                colours.add(0.6f);
+            }
         }
     }
 
@@ -227,7 +244,11 @@ public class MarchingCubes extends DataLoader{
     }
 
     public static float[] getColours(){
-        return colours;
+        float[] arr = new float[colours.size()];
+        for (int i = 0; i < colours.size(); i++){
+            arr[i] = colours.get(i);
+        }
+        return arr;
     }
 
     public static int getWidth(){

@@ -30,7 +30,7 @@ public class WindowView {
     private static Matrix4f translationMatrix;
     private static Matrix4f rotationMatrix;
     private static Matrix4f scalingMatrix;
-    private static final Vector3f lightPos = new Vector3f(-100f, -100f, 0);
+    private static Vector3f lightPos;
     private static final float FOV = (float) Math.toRadians(60.0f);
     private static final float Z_NEAR = 0.01f;
     private static final float Z_FAR = 10000.0f;
@@ -77,9 +77,18 @@ public class WindowView {
         this.indices = indices;
         this.normals = normals;
         this.colours = colours;
+
+        System.out.printf("Generating mesh with: %n  - Vertices: %d%n  - Indices: %d%n  - Polygons: %d%n  - Normals: %d%n  - Colours: %d%n",
+                vertices.length / 3,
+                indices.length,
+                vertices.length / 9,
+                normals.length / 3,
+                colours.length / 3);
     }
 
-    public void setPos(int z){
+    public void setPos(int x, int y, int z){
+        this.posX = x;
+        this.posY = y;
         this.posZ = -z * 0.8f;
     }
 
@@ -110,8 +119,8 @@ public class WindowView {
                 (float) MarchingCubes.getHeight() / 2,
                 (float) MarchingCubes.getDepth() / 2
                 );
-        mesh = MeshLoader.createMesh(vertices, indices, normals, colours);
         setupShader();
+        mesh = MeshLoader.createMesh(vertices, indices, normals, colours);
     }
 
     private void createWindow(){
@@ -183,6 +192,8 @@ public class WindowView {
                     new Vector3f(0, 0, -1), // camera look direction
                     new Vector3f(0, 1, 0)   // camera up direction
             );
+
+            lightPos = new Vector3f(200, 200, -posZ * 0);
 
             timer.init();
         }

@@ -15,10 +15,10 @@ public class MeshLoader {
 
     public static Mesh createMesh(float[] vertices, int[] indices, float[] normals, float[] colours){
         genVao();
-        genVbo(vertices, 0);
+        genVbo(vertices, GL20.glGetAttribLocation(ShaderProgram.getProgramID(), "position"));
         genIbo(indices);
-        genVbo(normals, 1);
-        genVbo(colours, 2);
+        genVbo(normals, GL20.glGetAttribLocation(ShaderProgram.getProgramID(), "normal"));
+        genVbo(colours, GL20.glGetAttribLocation(ShaderProgram.getProgramID(), "colour"));
 
         return new Mesh(vaoID, indices.length);
     }
@@ -33,7 +33,7 @@ public class MeshLoader {
             int vbo = GL15.glGenBuffers();
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
             GL15.glBufferData(GL15.GL_ARRAY_BUFFER, data, GL15.GL_STATIC_DRAW);
-            GL20.glVertexAttribPointer(index, 3, GL11.GL_FLOAT, false, 0, 0);
+            GL20.glVertexAttribPointer(index, 3, GL11.GL_FLOAT, false, 0, GL11.GL_NONE);
         } catch (Exception e){
             e.printStackTrace();
         }
