@@ -6,36 +6,16 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         WindowView window = new WindowView(640, 480, "Marching Cubes v4.0 - DEMO");
 
-        String dir = "CT_Slices";
+        String dir = "temp";
         DataLoader.Data[][][] data = DataLoader.getData(dir);
 
         MarchingCubes.generateVertices(data);
         float[] vertices = MarchingCubes.getVertices();
         int[] indices = MarchingCubes.getIndices();
-
-        float[] colours = new float[vertices.length * 3];
-        boolean coloured = false;
-
-        if (coloured) {
-            for (int i = 0; i < (colours.length + 1) / 9; i++) {
-                colours[i * 9] = 1f; // R
-                colours[i * 9 + 1] = 0f; // G
-                colours[i * 9 + 2] = 0f; // B
-                colours[i * 9 + 3] = 0f; // R
-                colours[i * 9 + 4] = 1f; // G
-                colours[i * 9 + 5] = 0f; // B
-                colours[i * 9 + 6] = 0f; // R
-                colours[i * 9 + 7] = 0f; // G
-                colours[i * 9 + 8] = 1f; // B
-            }
-        } else {
-            Arrays.fill(colours, 1.0f);
-        }
-
-        //colours = assignColorsToPolygons(vertices);
+        float [] colours = MarchingCubes.getColours();
 
         System.out.printf("Indices: %d%n", indices.length);
         System.out.printf("Vertices: %d%n", vertices.length / 3);

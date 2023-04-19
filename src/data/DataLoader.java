@@ -34,10 +34,15 @@ public class DataLoader {
     private static File directory;
     private static File[] slices;
 
-    public static Data[][][] getData(String dir) throws IOException {
+    public static Data[][][] getData(String dir) throws Exception {
         directory = new File(System.getProperty("user.dir") + File.separator + dir);
         slices = getSlices();
-        generateData();
+        if (slices.length > 0) {
+            generateData();
+        } else {
+            System.err.printf("No files found in %s%n", directory.getPath());
+
+        }
 
         return data;
     }

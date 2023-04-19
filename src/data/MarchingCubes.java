@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 public class MarchingCubes extends DataLoader{
     private static final float isoLevel = 0.1f;
+    public static final boolean enableColours = false;
 
     private static final int[] edgeTable = TriangulationTable.getEdgeTable();
     private static final int[][] triTable = TriangulationTable.getTriTable();
@@ -14,6 +15,7 @@ public class MarchingCubes extends DataLoader{
     private static final ArrayList<Float> vertices = new ArrayList<>();
     private static final ArrayList<Integer> indices = new ArrayList<>();
     private static final ArrayList<Float> normals = new ArrayList<>();
+    private static float[] colours;
 
     private static Data[][][] data;
 
@@ -180,6 +182,26 @@ public class MarchingCubes extends DataLoader{
         }
     }
 
+    private static void assignColours(){
+        colours = new float[vertices.size() * 3];
+
+        if (enableColours) {
+            for (int i = 0; i < (colours.length + 1) / 9; i++) {
+                colours[i * 9] = 1f; // R
+                colours[i * 9 + 1] = 0f; // G
+                colours[i * 9 + 2] = 0f; // B
+                colours[i * 9 + 3] = 0f; // R
+                colours[i * 9 + 4] = 1f; // G
+                colours[i * 9 + 5] = 0f; // B
+                colours[i * 9 + 6] = 0f; // R
+                colours[i * 9 + 7] = 0f; // G
+                colours[i * 9 + 8] = 1f; // B
+            }
+        } else {
+            Arrays.fill(colours, 1.0f);
+        }
+    }
+
     public static float[] getVertices(){
         float[] arr = new float[vertices.size()];
         for (int i = 0; i < vertices.size(); i++){
@@ -202,6 +224,10 @@ public class MarchingCubes extends DataLoader{
             arr[i] = normals.get(i);
         }
         return arr;
+    }
+
+    public static float[] getColours(){
+        return colours;
     }
 
     public static int getWidth(){
