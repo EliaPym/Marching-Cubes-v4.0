@@ -41,7 +41,6 @@ public class DataLoader {
             generateData();
         } else {
             System.err.printf("No files found in %s%n", directory.getPath());
-
         }
 
         return data;
@@ -62,7 +61,7 @@ public class DataLoader {
 
         data = new Data[width][height][depth];
 
-        for (int y = 0; y < slices.length; y++){
+        for (int y = 0; y < height; y++){
             BufferedImage image = ImageIO.read(slices[y]);
 
             for (int x = 0; x < width; x++){
