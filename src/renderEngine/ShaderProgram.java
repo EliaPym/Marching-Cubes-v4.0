@@ -22,11 +22,11 @@ public class ShaderProgram {
 
     public ShaderProgram() throws Exception {
         programID = GL20.glCreateProgram();
-        System.out.println("Program ID: " + programID);
 
         if (programID == 0){
             throw new Exception("could not create Shader");
         }
+        System.out.println("Program ID: " + programID);
 
         uniforms = new HashMap<>();
     }

@@ -1,6 +1,6 @@
 package renderEngine;
 
-import data.DataLoader;
+import data.MarchingCubes;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.*;
@@ -8,7 +8,6 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.File;
-import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -34,7 +33,7 @@ public class WindowView {
     private static final Vector3f lightPos = new Vector3f(-100f, -100f, 0);
     private static final float FOV = (float) Math.toRadians(60.0f);
     private static final float Z_NEAR = 0.01f;
-    private static final float Z_FAR = 1000.0f;
+    private static final float Z_FAR = 10000.0f;
     private float aspectRatio;
 
     private float[] vertices;
@@ -48,7 +47,7 @@ public class WindowView {
     float posZ = -10f;
     // rotation
     float axisX = 0f;
-    float axisY = 0f;
+    float axisY = 1f;
     float axisZ = 0f;
     // scaling
     float scaleX = 1f;
@@ -63,7 +62,7 @@ public class WindowView {
     private static GLFWKeyCallback keyCallback;
     private static ShaderProgram shaderProgram;
 
-    public static boolean renderWireframe;
+    public static boolean renderWireframe = false;
 
     public WindowView(int width, int height, String title){
         windowWidth = width;
@@ -87,6 +86,8 @@ public class WindowView {
     public void run(){
         try {
             init(); // initialise the program
+            System.out.printf("Successfully created GLFW Window with ID: %d%n", window);
+            System.out.printf("GLFW Window created with title \"%s\"%n", windowTitle);
             loop(); // run loop as long as program remains open
         } catch (Exception e){
             e.printStackTrace();
@@ -103,7 +104,12 @@ public class WindowView {
         }
 
         createWindow();
-        inputHandler = new InputHandler(window);
+        inputHandler = new InputHandler(
+                window,
+                (float) MarchingCubes.getWidth() / 2,
+                (float) MarchingCubes.getHeight() / 2,
+                (float) MarchingCubes.getDepth() / 2
+                );
         mesh = MeshLoader.createMesh(vertices, indices, normals, colours);
         setupShader();
     }
@@ -224,6 +230,17 @@ public class WindowView {
             angle = 0;
         }
         angle += delta * anglePerSecond;
+
+        if (inputHandler.getLeftButtonDown()) {
+            axisX += inputHandler.getRotY();
+            axisY += inputHandler.getRotX();
+        }
+
+        if (inputHandler.getRButtonDown()) {
+            axisX = 0;
+            axisY = 0;
+            inputHandler.setRButtonDown(false);
+        }
     }
 
     private void render(){
@@ -231,22 +248,27 @@ public class WindowView {
 
         if (renderWireframe) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            GL11.glEnable(GL_CULL_FACE);
         }
 
         modelMatrix = new Matrix4f().identity();
 
         translationMatrix = new Matrix4f().translation(
-                inputHandler.getMoveX(),
-                inputHandler.getMoveY(),
-                inputHandler.getMoveZ() + posZ);
+                inputHandler.getTransX(),
+                inputHandler.getTransY(),
+                inputHandler.getTransZ() + posZ);
 
-        rotationMatrix = new Matrix4f().rotate((float)Math.toRadians(angle * axisX), 1f, 0f, 0f); // rotate along x-axis
-        rotationMatrix = rotationMatrix.rotate((float)Math.toRadians(angle * axisY), 0f, 1f, 0f); // rotate along y-axis
-        rotationMatrix = rotationMatrix.rotate((float)Math.toRadians(angle * axisZ), 0f, 0f, 1f); // rotate along z-axis
+        Matrix4f rotationX = new Matrix4f().rotate((float) Math.toRadians(axisX), 1.0f, 0.0f, 0.0f);
+        Matrix4f rotationY = new Matrix4f().rotate((float) Math.toRadians(axisY), 0.0f, 1.0f, 0.0f);
+        rotationMatrix = rotationY.mul(rotationX);
+        inputHandler.resetRot();
+
         scalingMatrix = new Matrix4f().scaling(
-                inputHandler.getInputScroll() * scaleX,
-                inputHandler.getInputScroll() * scaleY,
-                inputHandler.getInputScroll() * scaleZ);
+                inputHandler.getScaling(),
+                inputHandler.getScaling(),
+                inputHandler.getScaling());
 
         modelMatrix = modelMatrix.mul(translationMatrix).mul(rotationMatrix).mul(scalingMatrix);
 

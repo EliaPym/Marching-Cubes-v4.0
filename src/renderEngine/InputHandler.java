@@ -1,85 +1,119 @@
 package renderEngine;
 
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
-import org.lwjgl.system.MemoryStack;
+import org.lwjgl.glfw.*;
 
-import java.nio.DoubleBuffer;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class InputHandler {
     private long window;
+    private final float limitX;
+    private final float limitY;
+    private final float limitZ;
     private final int moveRate = 5;
     private final double scaleRate = 0.5;
     private final double scaleLimitLower = 1;
     private final double scaleLimitHigher = 10;
 
-    DoubleBuffer mouseX = MemoryStack.stackMallocDouble(1);
-    DoubleBuffer mouseY = MemoryStack.stackMallocDouble(1);
+    private boolean rButtonDown = false;
 
-    double lastMouseX;
-    double lastMouseY;
+    private boolean leftButtonDown = false;
+    private float lastMouseX = 0;
+    private float lastMouseY = 0;
 
-    private int moveX = 0;
-    private int moveY = 0;
-    private int moveZ = 0;
+    private int transX = 0;
+    private int transY = 0;
+    private int transZ = 0;
 
-    private double inputScroll = 1;
+    private float dx = 0;
+    private float dy = 0;
 
-    public InputHandler(long window){
+    private double scaling = 1;
+
+    public InputHandler(long window, float limitX, float limitY, float limitZ){
         this.window = window;
+        this.limitX = limitX;
+        this.limitY = limitY;
+        this.limitZ = limitZ;
     }
 
     public void update(){
-        //updateMousePos();
-        //updateMouseHold();
         updateKeyPress();
+        updateMousePos();
         updateScroll();
     }
 
     private void updateMousePos(){
-        lastMouseX = mouseX.get();
-        lastMouseY = mouseY.get();
+        GLFW.glfwSetMouseButtonCallback(window, (long windowHandle, int button, int action, int mods) -> {
+            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                leftButtonDown = action == GLFW.GLFW_PRESS;
+                dx = 0;
+                dy = 0;
+            }
+        });
 
-        mouseX.clear();
-        mouseY.clear();
+        GLFW.glfwSetCursorPosCallback(window, (long windowHandle, double x, double y) -> {
+            if (leftButtonDown) {
+                dx = (float) x - lastMouseX;
+                dy = (float) y - lastMouseY;
+            }
 
-        GLFW.glfwGetCursorPos(window, mouseX, mouseY);
-    }
-
-    private void updateMouseHold(){
-        if (GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS){
-            double x = mouseX.get() - lastMouseX;
-            double y = mouseY.get() - lastMouseY;
-            System.out.printf("Direction Vector | X: %f | Y: %f%n", x, y);
-        }
+            lastMouseX = (float) x;
+            lastMouseY = (float) y;
+        });
     }
 
     private void updateKeyPress(){
         GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS){
-                    GLFW.glfwSetWindowShouldClose(window, true);
-                }
-                else if (key == GLFW.GLFW_KEY_LEFT && action == GLFW.GLFW_PRESS){
-                    moveX += moveRate;
-                }
-                else if (key == GLFW.GLFW_KEY_RIGHT && action == GLFW.GLFW_PRESS){
-                    moveX -= moveRate;
-                }
-                else if (key == GLFW.GLFW_KEY_PAGE_UP && action == GLFW.GLFW_PRESS){
-                    moveY += moveRate;
-                }
-                else if (key == GLFW.GLFW_KEY_PAGE_DOWN && action == GLFW.GLFW_PRESS){
-                    moveY -= moveRate;
-                }
-                else if (key == GLFW.GLFW_KEY_UP && action == GLFW.GLFW_PRESS){
-                    moveZ += moveRate;
-                }
-                else if (key == GLFW.GLFW_KEY_DOWN && action == GLFW.GLFW_PRESS){
-                    moveZ -= moveRate;
+                if (action == GLFW.GLFW_PRESS) {
+                    switch (key) {
+                        case GLFW.GLFW_KEY_ESCAPE:
+                            GLFW.glfwSetWindowShouldClose(window, true);
+                            break;
+                        case GLFW.GLFW_KEY_R:
+                            transX = 0;
+                            transY = 0;
+                            transZ = 0;
+                            dx = 0;
+                            dy = 0;
+                            scaling = 1;
+                            break;
+                        case GLFW.GLFW_KEY_W:
+                            WindowView.renderWireframe = !WindowView.renderWireframe;
+                            break;
+                        case GLFW.GLFW_KEY_LEFT:
+                            if (transX + moveRate <= limitX) {
+                                transX += moveRate;
+                            }
+                            break;
+                        case GLFW.GLFW_KEY_RIGHT:
+                            if (transX - moveRate >= -limitX) {
+                                transX -= moveRate;
+                            }
+                            break;
+                        case GLFW.GLFW_KEY_DOWN:
+                            if (transY + moveRate <= limitY) {
+                                transY += moveRate;
+                            }
+                            break;
+                        case GLFW.GLFW_KEY_UP:
+                            if (transY - moveRate >= -limitY) {
+                                transY -= moveRate;
+                            }
+                            break;
+                        case GLFW.GLFW_KEY_PAGE_DOWN:
+                            if (transZ + moveRate <= limitZ * 2) {
+                                transZ += moveRate;
+                            }
+                            break;
+                        case GLFW.GLFW_KEY_PAGE_UP:
+                            if (transZ - moveRate >= -limitZ) {
+                                transZ -= moveRate;
+                            }
+                            break;
+                    }
+                    rButtonDown = key == GLFW.GLFW_KEY_R;
                 }
             }
         });
@@ -88,37 +122,62 @@ public class InputHandler {
     private void updateScroll(){
         GLFW.glfwSetScrollCallback(window, new GLFWScrollCallback() {
             @Override
-            public void invoke(long window, double xoffset, double yoffset) {
-                if (yoffset > 0) {
-                    if ((inputScroll + scaleRate) <= scaleLimitHigher) {
-                        inputScroll += scaleRate;
+            public void invoke(long window, double offsetX, double offsetY) {
+                if (offsetY > 0) {
+                    if ((scaling + scaleRate) <= scaleLimitHigher) {
+                        scaling += scaleRate;
                     } else {
-                        inputScroll = scaleLimitHigher;
+                        scaling = scaleLimitHigher;
                     }
-                } else if (yoffset < 0) {
-                    if ((inputScroll - scaleRate) >= scaleLimitLower) {
-                        inputScroll -= scaleRate;
+                } else if (offsetY < 0) {
+                    if ((scaling - scaleRate) >= scaleLimitLower) {
+                        scaling -= scaleRate;
                     } else {
-                        inputScroll = scaleLimitLower;
+                        scaling = scaleLimitLower;
                     }
                 }
             }
         });
     }
 
-    public int getMoveX(){
-        return moveX;
+    public int getTransX(){
+        return transX;
     }
 
-    public int getMoveY(){
-        return moveY;
+    public int getTransY(){
+        return transY;
     }
 
-    public int getMoveZ(){
-        return moveZ;
+    public int getTransZ(){
+        return transZ;
     }
 
-    public float getInputScroll(){
-        return (float) inputScroll;
+    public boolean getLeftButtonDown(){
+        return leftButtonDown;
+    }
+
+    public void setRButtonDown(boolean b){
+        rButtonDown = b;
+    }
+
+    public boolean getRButtonDown(){
+        return rButtonDown;
+    }
+
+    public float getRotX(){
+        return dx;
+    }
+
+    public float getRotY(){
+        return dy;
+    }
+
+    public void resetRot(){
+        dx = 0;
+        dy = 0;
+    }
+
+    public float getScaling(){
+        return (float) scaling;
     }
 }
