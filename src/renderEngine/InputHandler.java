@@ -79,6 +79,9 @@ public class InputHandler {
                             dy = 0;
                             scaling = 1;
                             break;
+                        case GLFW.GLFW_KEY_E:
+                            WindowView.autoRotate = !WindowView.autoRotate;
+                            break;
                         case GLFW.GLFW_KEY_W:
                             WindowView.renderWireframe = !WindowView.renderWireframe;
                             break;

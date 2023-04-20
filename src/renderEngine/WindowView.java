@@ -19,6 +19,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class WindowView {
     private static int windowWidth;
     private static int windowHeight;
+    private static boolean windowFullscreen;
     private static String windowTitle;
     private static long window;
     private static Mesh mesh;
@@ -61,10 +62,12 @@ public class WindowView {
     private static ShaderProgram shaderProgram;
 
     public static boolean renderWireframe = false;
+    public static boolean autoRotate = false;
 
-    public WindowView(int width, int height, String title){
+    public WindowView(int width, int height, boolean fullscreen, String title){
         windowWidth = width;
         windowHeight = height;
+        windowFullscreen = fullscreen;
         windowTitle = title;
 
         timer = new Timer();
@@ -137,8 +140,12 @@ public class WindowView {
         // Enable forward compatibility for OpenGL context
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GLFW.GLFW_TRUE);
 
+        GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+        assert vidMode != null;
+
         // creates new GLFW window context
-        window = GLFW.glfwCreateWindow(windowWidth, windowHeight, windowTitle, NULL, NULL);
+        if (windowFullscreen) window = GLFW.glfwCreateWindow(vidMode.width(), vidMode.height(), windowTitle, GLFW.glfwGetPrimaryMonitor(), NULL);
+        else window = GLFW.glfwCreateWindow(windowWidth, windowHeight, windowTitle, NULL, NULL);
 
         // check if window has successfully been created
         if (window == NULL){
@@ -164,8 +171,6 @@ public class WindowView {
             GLFW.glfwGetWindowSize(window, pWidth, pHeight);
 
             // align window at centre of screen
-            GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-            assert vidMode != null;
             GLFW.glfwSetWindowPos(window, (vidMode.width() - pWidth.get(0)) / 2, (vidMode.height() - pHeight.get(0)) / 2);
 
             // create OpenGL context
@@ -272,6 +277,7 @@ public class WindowView {
 
         Matrix4f rotationX = new Matrix4f().rotate((float) Math.toRadians(axisX), 1.0f, 0.0f, 0.0f);
         Matrix4f rotationY = new Matrix4f().rotate((float) Math.toRadians(axisY), 0.0f, 1.0f, 0.0f);
+        if (autoRotate) rotationY = new Matrix4f().rotate((float) Math.toRadians(angle), 0.0f, 1.0f, 0.0f);
         rotationMatrix = rotationY.mul(rotationX);
         inputHandler.resetRot();
 
