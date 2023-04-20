@@ -79,9 +79,6 @@ public class InputHandler {
                             dy = 0;
                             scaling = 1;
                             break;
-                        case GLFW.GLFW_KEY_E:
-                            WindowView.autoRotate = !WindowView.autoRotate;
-                            break;
                         case GLFW.GLFW_KEY_W:
                             WindowView.renderWireframe = !WindowView.renderWireframe;
                             break;
@@ -114,6 +111,15 @@ public class InputHandler {
                             if (transZ - moveRate >= -limitZ) {
                                 transZ -= moveRate;
                             }
+                            break;
+                        case GLFW.GLFW_KEY_1:
+                            WindowView.autoRotateX = !WindowView.autoRotateX;
+                            break;
+                        case GLFW.GLFW_KEY_2:
+                            WindowView.autoRotateY = !WindowView.autoRotateY;
+                            break;
+                        case GLFW.GLFW_KEY_3:
+                            WindowView.autoRotateZ = !WindowView.autoRotateZ;
                             break;
                     }
                     rButtonDown = key == GLFW.GLFW_KEY_R;

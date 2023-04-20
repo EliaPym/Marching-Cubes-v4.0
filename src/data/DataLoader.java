@@ -35,7 +35,7 @@ public class DataLoader {
     private static File[] slices;
 
     public static Data[][][] getData(String dir) throws Exception {
-        directory = new File(System.getProperty("user.dir") + File.separator + dir);
+        directory = new File(dir);
         slices = getSlices();
         if (slices.length > 0) {
             generateData();

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MarchingCubes extends DataLoader{
-    private static final float isoLevel = 0.1f;
+    public static float isoLevel = 0.1f;
     public static boolean enableColours = false;
 
     private static final int[] edgeTable = TriangulationTable.getEdgeTable();

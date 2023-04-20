@@ -32,7 +32,7 @@ public class WindowView {
     private static Matrix4f rotationMatrix;
     private static Matrix4f scalingMatrix;
     private static Vector3f lightPos;
-    private static final float FOV = (float) Math.toRadians(60.0f);
+    private static final float FOV = (float) Math.toRadians(80.0f);
     private static final float Z_NEAR = 0.01f;
     private static final float Z_FAR = 10000.0f;
     private float aspectRatio;
@@ -48,21 +48,25 @@ public class WindowView {
     float posZ = -10f;
     // rotation
     float axisX = 0f;
-    float axisY = 1f;
+    float axisY = 0f;
     float axisZ = 0f;
     // scaling
     float scaleX = 1f;
     float scaleY = 1f;
     float scaleZ = 1f;
 
-    private float angle = 0f;
+    private float angleX = 0f;
+    private float angleY = 0f;
+    private float angleZ = 0f;
     private final Timer timer;
 
     private static GLFWErrorCallback errorCallback;
     private static ShaderProgram shaderProgram;
 
     public static boolean renderWireframe = false;
-    public static boolean autoRotate = false;
+    public static boolean autoRotateX = false;
+    public static boolean autoRotateY = false;
+    public static boolean autoRotateZ = false;
 
     public WindowView(int width, int height, boolean fullscreen, String title){
         windowWidth = width;
@@ -185,7 +189,7 @@ public class WindowView {
             projectionMatrix = new Matrix4f().perspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
 
             translationMatrix = new Matrix4f().translation(posX, posY, posZ);
-            scalingMatrix = new Matrix4f().scaling(1, 1, 1);
+            scalingMatrix = new Matrix4f().scaling(scaleX, scaleY, scaleZ);
             rotationMatrix = new Matrix4f().rotation(0, 1, 1, 1);
 
             modelMatrix = new Matrix4f().identity();
@@ -240,11 +244,19 @@ public class WindowView {
     }
 
     private void update(float delta){
-        if (angle > 360) {
-            angle = 0;
-        }
         float anglePerSecond = 50f;
-        angle += delta * anglePerSecond;
+        if (autoRotateX) {
+            if (angleX > 360) angleX = 0;
+            angleX += delta * anglePerSecond;
+        }
+        if (autoRotateY) {
+            if (angleY > 360) angleY = 0;
+            angleY += delta * anglePerSecond;
+        }
+        if (autoRotateZ) {
+            if (angleZ > 360) angleZ = 0;
+            angleZ += delta * anglePerSecond;
+        }
 
         if (inputHandler.getLeftButtonDown()) {
             axisX += inputHandler.getRotY();
@@ -254,6 +266,13 @@ public class WindowView {
         if (inputHandler.getRButtonDown()) {
             axisX = 0;
             axisY = 0;
+            axisZ = 0;
+            angleX = 0;
+            angleY = 0;
+            angleZ = 0;
+            autoRotateX = false;
+            autoRotateY = false;
+            autoRotateZ = false;
             inputHandler.setRButtonDown(false);
         }
     }
@@ -275,10 +294,10 @@ public class WindowView {
                 inputHandler.getTransY(),
                 inputHandler.getTransZ() + posZ);
 
-        Matrix4f rotationX = new Matrix4f().rotate((float) Math.toRadians(axisX), 1.0f, 0.0f, 0.0f);
-        Matrix4f rotationY = new Matrix4f().rotate((float) Math.toRadians(axisY), 0.0f, 1.0f, 0.0f);
-        if (autoRotate) rotationY = new Matrix4f().rotate((float) Math.toRadians(angle), 0.0f, 1.0f, 0.0f);
-        rotationMatrix = rotationY.mul(rotationX);
+        Matrix4f rotationX = new Matrix4f().rotate((float) Math.toRadians(axisX + angleX), 1.0f, 0.0f, 0.0f);
+        Matrix4f rotationY = new Matrix4f().rotate((float) Math.toRadians(axisY + angleY), 0.0f, 1.0f, 0.0f);
+        Matrix4f rotationZ = new Matrix4f().rotate((float) Math.toRadians(axisZ + angleZ), 0.0f, 0.0f, 1.0f);
+        rotationMatrix = rotationZ.mul(rotationY.mul(rotationX));
         inputHandler.resetRot();
 
         scalingMatrix = new Matrix4f().scaling(

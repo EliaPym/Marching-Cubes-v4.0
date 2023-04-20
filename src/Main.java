@@ -2,6 +2,7 @@ import data.DataLoader;
 import data.MarchingCubes;
 import renderEngine.WindowView;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ public class Main {
     private static boolean windowFullscreen = false;
     private static String windowTitle;
     private static String dir;
+    private static float isoLevel = 0.1f;
     private static boolean col = false;
 
     public static void main(String[] args) throws Exception {
@@ -18,6 +20,7 @@ public class Main {
 
         DataLoader.Data[][][] data = DataLoader.getData(dir);
 
+        MarchingCubes.isoLevel = isoLevel;
         MarchingCubes.enableColours = col;
         MarchingCubes.generateVertices(data);
 
@@ -35,13 +38,18 @@ public class Main {
     private static void userInput(){
         Scanner in = new Scanner(System.in);
         int inInt;
+        float inFlt;
         String inStr;
 
         System.out.print("Enter source directory: ");
         inStr = in.next();
-        if (Objects.equals(inStr, "0")) dir = "CT_Slices";
-        else if (Objects.equals(inStr, "1")) dir = "CT_Bunny";
+        if (Objects.equals(inStr, "0")) dir = System.getProperty("user.dir") + File.separator + "CT_Slices";
+        else if (Objects.equals(inStr, "1")) dir = System.getProperty("user.dir") + File.separator + "CT_Bunny";
         else dir = inStr;
+
+        System.out.print("Enter ISO Level: ");
+        inFlt = in.nextFloat();
+        if (inFlt > 0.0f) isoLevel = inFlt;
 
         System.out.print("Enable fullscreen (y/n): ");
         inStr = in.next();
