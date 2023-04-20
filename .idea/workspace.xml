@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c85a6182-06d3-4de2-8690-d09c18340ca7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/MarchingCubes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/MarchingCubes.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/FragmentShader.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/DataLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DataLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/MarchingCubes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/MarchingCubes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,22 +46,11 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "E:/GitHub/Marching-Cubes-v4.0",
-    "project.structure.last.edited": "Global Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
-  }
-}]]></component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ExtractImageData" />
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -95,5 +86,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

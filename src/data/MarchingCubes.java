@@ -18,6 +18,7 @@ public class MarchingCubes extends DataLoader{
     private static ArrayList<Float> colours = new ArrayList<>();
 
     private static Data[][][] data;
+    private static float max_x = 0, max_y = 0, max_z = 0;
 
     public static void generateVertices(Data[][][] in_data){
         data = in_data;
@@ -107,6 +108,8 @@ public class MarchingCubes extends DataLoader{
                                 vertexCount += 3;
                                 triCount = 0;
                             }
+
+                            assignColours(x, y, z);
                         }
 
                     } catch(Exception e){
@@ -116,7 +119,6 @@ public class MarchingCubes extends DataLoader{
             }
         }
         calculateNormals();
-        assignColours();
     }
 
     private static Vertex VertexInterpolation(Data p1, Data p2){
@@ -142,8 +144,6 @@ public class MarchingCubes extends DataLoader{
     }
 
     private static void normaliseVertices(){
-        float max_x = 0, max_y = 0, max_z = 0;
-
         for (int x = 0; x < data.length; x++){
             for (int y = 0; y < data[0].length; y++){
                 for (int z = 0; z < data[0][0].length; z++) {
@@ -181,41 +181,20 @@ public class MarchingCubes extends DataLoader{
             normals.add(v.y - o.y);
             normals.add(v.z - o.z);
         }
-        /*
-        for (int i = 0; i < (vertices.size() + 1) / 9; i++){
-            Vector3f v0 = new Vector3f(vertices.get(i * 9    ), vertices.get(i * 9 + 1), vertices.get(i * 9 + 2));
-            Vector3f v1 = new Vector3f(vertices.get(i * 9 + 3), vertices.get(i * 9 + 4), vertices.get(i * 9 + 5));
-            Vector3f v2 = new Vector3f(vertices.get(i * 9 + 6), vertices.get(i * 9 + 7), vertices.get(i * 9 + 8));
-
-            Vector3f d = new Vector3f().cross(v1.sub(v0), v2.sub(v0));
-            Vector3f n = new Vector3f().normalize(d);
-
-            for (int j = 0; j < 3; j++) {
-                normals.add(n.x);
-                normals.add(n.y);
-                normals.add(n.z);
-            }
-        }
-        */
     }
 
-    private static void assignColours(){
+    private static void assignColours(int x, int y, int z){
         if (enableColours) {
-            for (int i = 0; i < (vertices.size() + 1) / 9; i++) {
-                colours.add(1f);  // R
-                colours.add(0f);  // G
-                colours.add(0f);  // B
-                colours.add(0f);  // R
-                colours.add(1f);  // G
-                colours.add(0f);  // B
-                colours.add(0f);  // R
-                colours.add(0f);  // G
-                colours.add(1f);  // B
-            }
+            float r = (float) x / data.length;
+            float g = (float) y / data[0].length;
+            float b = (float) z / data[0][0].length;
+            colours.add(r);
+            colours.add(g);
+            colours.add(b);
         } else {
-            for (int i = 0; i < vertices.size(); i++){
-                colours.add(0.6f);
-            }
+            colours.add(0.6f);
+            colours.add(0.6f);
+            colours.add(0.6f);
         }
     }
 
