@@ -5,9 +5,12 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.File;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -32,7 +35,7 @@ public class WindowView {
     private static Matrix4f rotationMatrix;
     private static Matrix4f scalingMatrix;
     private static Vector3f lightPos;
-    private static final float FOV = (float) Math.toRadians(80.0f);
+    private static final float FOV = (float) Math.toRadians(60.0f);
     private static final float Z_NEAR = 0.01f;
     private static final float Z_FAR = 10000.0f;
     private float aspectRatio;
@@ -208,6 +211,27 @@ public class WindowView {
         GL11.glEnable(GL_DEPTH_TEST);
         GL11.glDepthFunc(GL11.GL_LESS);
         GL11.glEnable(GL_CULL_FACE);
+
+        ByteBuffer icon32;
+        int iconWidth, iconHeight;
+
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            IntBuffer comp = stack.mallocInt(1);
+            IntBuffer w = stack.mallocInt(1);
+            IntBuffer h = stack.mallocInt(1);
+
+            icon32 = STBImage.stbi_load(System.getProperty("user.dir") + "\\src\\icons\\cube_icon128.png", w, h, comp, 4);
+            iconWidth = w.get();
+            iconHeight = h.get();
+        }
+
+        if (icon32 != null) {
+            GLFWImage image = GLFWImage.malloc();
+            GLFWImage.Buffer imageBuffer = GLFWImage.malloc(1);
+            image.set(iconWidth, iconHeight, icon32);
+            imageBuffer.put(0, image);
+            GLFW.glfwSetWindowIcon(window, imageBuffer);
+        }
     }
 
     private void setupShader() throws Exception {
@@ -227,6 +251,16 @@ public class WindowView {
         shaderProgram.createUniform("projection");
 
         shaderProgram.createUniform("lightPos");
+        shaderProgram.createUniform("ambientStrength");
+        shaderProgram.createUniform("enableDiffuse");
+
+        if (MarchingCubes.enableColours) {
+            shaderProgram.setUniform("ambientStrength", 1f);
+            shaderProgram.setUniform("enableDiffuse", 0);
+        } else {
+            shaderProgram.setUniform("ambientStrength", 0.5f);
+            shaderProgram.setUniform("enableDiffuse", 1);
+        }
     }
 
     private void loop(){
@@ -296,7 +330,8 @@ public class WindowView {
 
         Matrix4f rotationX = new Matrix4f().rotate((float) Math.toRadians(axisX + angleX), 1.0f, 0.0f, 0.0f);
         Matrix4f rotationY = new Matrix4f().rotate((float) Math.toRadians(axisY + angleY), 0.0f, 1.0f, 0.0f);
-        Matrix4f rotationZ = new Matrix4f().rotate((float) Math.toRadians(axisZ + angleZ), 0.0f, 0.0f, 1.0f);
+        Matrix4f rotationZ = new Matrix4f().rotate((float) Math.toRadians(0), 0.0f, 0.0f, 1.0f);
+        //System.out.printf("x: %f, y: %f, z: %f%n", (axisX + angleX), (axisY + angleY), (axisZ + angleZ));
         rotationMatrix = rotationZ.mul(rotationY.mul(rotationX));
         inputHandler.resetRot();
 

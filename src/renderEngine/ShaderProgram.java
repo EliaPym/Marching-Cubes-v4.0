@@ -113,6 +113,15 @@ public class ShaderProgram {
         }
     }
 
+    public void setUniform(String uniformName, float value){
+        try {
+            glUniform1f(uniforms.get(uniformName), value);
+        } catch (Exception e) {
+            System.err.println("Failed to set uniform for: " + uniformName);
+            e.printStackTrace();
+        }
+    }
+
     public void bind(){
         GL20.glUseProgram(programID);
     }

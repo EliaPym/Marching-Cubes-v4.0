@@ -15,7 +15,7 @@ public class MarchingCubes extends DataLoader{
     private static final ArrayList<Float> vertices = new ArrayList<>();
     private static final ArrayList<Integer> indices = new ArrayList<>();
     private static final ArrayList<Float> normals = new ArrayList<>();
-    private static ArrayList<Float> colours = new ArrayList<>();
+    private static final ArrayList<Float> colours = new ArrayList<>();
 
     private static Data[][][] data;
     private static float max_x = 0, max_y = 0, max_z = 0;

@@ -5,7 +5,7 @@ import org.lwjgl.glfw.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class InputHandler {
-    private long window;
+    private final long window;
     private final float limitX;
     private final float limitY;
     private final float limitZ;
