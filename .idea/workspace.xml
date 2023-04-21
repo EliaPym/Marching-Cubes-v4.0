@@ -13,17 +13,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c85a6182-06d3-4de2-8690-d09c18340ca7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Marching_Cubes_v4_0_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Marching-Cubes-v4.0.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Marching-Cubes-v4.0.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Report.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/Marching_Cubes_v4_0_jar/Marching-Cubes-v4.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/WindowView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/WindowView.java" afterDir="false" />
-    </list>
+    <list default="true" id="c85a6182-06d3-4de2-8690-d09c18340ca7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
