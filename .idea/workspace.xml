@@ -14,22 +14,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c85a6182-06d3-4de2-8690-d09c18340ca7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Marching_Cubes_v4_0_jar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader$Data.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader$Data.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader$Vertex.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader$Vertex.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/MarchingCubes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/MarchingCubes.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/FragmentShader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/InputHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/InputHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/ShaderProgram.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/ShaderProgram.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Marching-Cubes-v4.0.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Marching-Cubes-v4.0.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Report.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/Marching_Cubes_v4_0_jar/Marching-Cubes-v4.0.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/DataLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DataLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/MarchingCubes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/MarchingCubes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/FragmentShader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/InputHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/ShaderProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/ShaderProgram.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/renderEngine/WindowView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/WindowView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,7 +68,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts/Marching_Cubes_v4_0_jar/Marching-Cubes-v4.0.jar" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -100,11 +92,23 @@
       <module name="Marching-Cubes-v4.0" />
       <method v="2">
         <option name="Make" enabled="true" />
+        <option name="MakeNoErrorCheck" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Jar Build" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/Marching_Cubes_v4_0_jar/Marching-Cubes-v4.0.jar" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\User\GitHub\Marching-Cubes-v4.0" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2">
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="Marching-Cubes-v4.0:jar" />
+        </option>
       </method>
     </configuration>
     <list>
       <item itemvalue="Application.LWJGL Debug" />
       <item itemvalue="Application.Main" />
+      <item itemvalue="JAR Application.Jar Build" />
     </list>
     <recent_temporary>
       <list>

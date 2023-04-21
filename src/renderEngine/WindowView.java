@@ -8,13 +8,15 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import java.io.File;
+import java.io.*;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -212,23 +214,34 @@ public class WindowView {
         GL11.glDepthFunc(GL11.GL_LESS);
         GL11.glEnable(GL_CULL_FACE);
 
-        ByteBuffer icon32;
-        int iconWidth, iconHeight;
+        ByteBuffer icon128 = null;
+        int iconWidth = 0, iconHeight = 0;
 
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer comp = stack.mallocInt(1);
             IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);
 
-            icon32 = STBImage.stbi_load(System.getProperty("user.dir") + "\\src\\icons\\cube_icon128.png", w, h, comp, 4);
+            icon128 = STBImage.stbi_load(System.getProperty("user.dir") + "\\src\\icons\\cube_icon128.png", w, h, comp, 4);
             iconWidth = w.get();
             iconHeight = h.get();
         }
+        if (icon128 == null) {
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                IntBuffer comp = stack.mallocInt(1);
+                IntBuffer w = stack.mallocInt(1);
+                IntBuffer h = stack.mallocInt(1);
 
-        if (icon32 != null) {
+                icon128 = STBImage.stbi_load(System.getProperty("user.dir") + "\\Resources\\Icons\\cube_icon128.png", w, h, comp, 4);
+                iconWidth = w.get();
+                iconHeight = h.get();
+            }
+        }
+
+        if (icon128 != null) {
             GLFWImage image = GLFWImage.malloc();
             GLFWImage.Buffer imageBuffer = GLFWImage.malloc(1);
-            image.set(iconWidth, iconHeight, icon32);
+            image.set(iconWidth, iconHeight, icon128);
             imageBuffer.put(0, image);
             GLFW.glfwSetWindowIcon(window, imageBuffer);
         }
@@ -238,8 +251,20 @@ public class WindowView {
         shaderProgram = new ShaderProgram();
         System.out.println("Shader Program created");
 
-        String vertexShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "src\\renderEngine\\VertexShader.glsl"), Charset.defaultCharset());
-        String fragmentShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "src\\renderEngine\\FragmentShader.glsl"), Charset.defaultCharset());
+        String vertexShader = null;
+        String fragmentShader = null;
+        try {
+            vertexShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "src\\renderEngine\\VertexShader.glsl"), Charset.defaultCharset());
+            fragmentShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "src\\renderEngine\\FragmentShader.glsl"), Charset.defaultCharset());
+        } catch (NoSuchFileException e) {
+            try {
+                vertexShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "\\Resources\\Shaders\\VertexShader.glsl"), Charset.defaultCharset());
+                fragmentShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "\\Resources\\Shaders\\FragmentShader.glsl"), Charset.defaultCharset());
+            } catch (NoSuchFileException f){
+                e.printStackTrace();
+                f.printStackTrace();
+            }
+        }
 
         shaderProgram.createVertexShader(vertexShader);
         shaderProgram.createFragmentShader(fragmentShader);
