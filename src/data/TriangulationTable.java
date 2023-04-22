@@ -1,5 +1,8 @@
 package data;
 
+/**
+ * Precomputed edge table and triangulation table
+ */
 public class TriangulationTable {
     private static final int[] edgeTable = {
             0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
@@ -294,11 +297,21 @@ public class TriangulationTable {
             {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
     };
 
-    public static int[] getEdgeTable(){
+    /**
+     * Returns precomputed edge table.
+     *
+     * @return int array of edge table
+     */
+    public static int[] getEdgeTable() {
         return edgeTable;
     }
 
-    public static int[][] getTriTable(){
+    /**
+     * Returns precomputed triangulation table.
+     *
+     * @return int array of triangulation table
+     */
+    public static int[][] getTriTable() {
         return triTable;
     }
 }

@@ -56,6 +56,8 @@ public class DataLoader {
 
             for (int x = 0; x < width; x++) {
                 for (int z = 0; z < depth; z++) {
+                    // get colour as RGB integer value
+                    // bitwise AND comparison to extract red, green, blue values
                     int clr = image.getRGB(x, z);
                     int r = (clr & 0x00ff0000) >> 16;
                     int g = (clr & 0x0000ff00) >> 8;
@@ -63,7 +65,7 @@ public class DataLoader {
 
                     data[x][y][z] = new Data(
                             new Vertex(x, y, z),
-                            ((float) (r + g + b) / 3) / 255
+                            ((float) (r + g + b) / 3) / 255 // average grey colour of pixel
                     );
                 }
             }
@@ -71,28 +73,28 @@ public class DataLoader {
     }
 
     /**
-     * Vertex class as a 3D vector
+     * Vertex class as a 3D vector.
      */
     public static class Vertex {
         /**
-         * X coordinate of vertex
+         * X coordinate of vertex.
          */
         public float x;
         /**
-         * Y coordinate of vertex
+         * Y coordinate of vertex.
          */
         public float y;
         /**
-         * Z coordinate of vertex
+         * Z coordinate of vertex.
          */
         public float z;
 
         /**
          * Instantiates a new Vertex.
          *
-         * @param x X component
-         * @param y Y component
-         * @param z Z component
+         * @param x x component of position
+         * @param y y component of position
+         * @param z z component of position
          */
         public Vertex(float x, float y, float z) {
             this.x = x;
@@ -102,20 +104,20 @@ public class DataLoader {
     }
 
     /**
-     * Data class containing vertex and value
+     * Data class containing vertex and value.
      */
     public static class Data {
         /**
-         * Position of data
+         * Position of data in 3D space.
          */
         Vertex pos;
         /**
-         * Value of data
+         * Value of data.
          */
         float val;
 
         /**
-         * Data constructor
+         * Data constructor.
          *
          * @param pos vertex position of data
          * @param val value of data
