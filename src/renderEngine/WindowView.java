@@ -313,7 +313,7 @@ public class WindowView {
                 IntBuffer w = stack.mallocInt(1);
                 IntBuffer h = stack.mallocInt(1);
 
-                icon128 = STBImage.stbi_load(System.getProperty("user.dir") + "\\src\\Resources\\Icons\\cube_icon128.png", w, h, comp, 4);
+                icon128 = STBImage.stbi_load(System.getProperty("user.dir") + "\\Resources\\Icons\\cube_icon128.png", w, h, comp, 4);
                 iconWidth = w.get();
                 iconHeight = h.get();
             }
@@ -346,8 +346,8 @@ public class WindowView {
             // try to read shader code from resources directory
             // used when program is run from .jar file
             try {
-                vertexShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "\\src\\Resources\\Shaders\\VertexShader.glsl"), Charset.defaultCharset());
-                fragmentShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "\\src\\Resources\\Shaders\\FragmentShader.glsl"), Charset.defaultCharset());
+                vertexShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "\\Resources\\Shaders\\VertexShader.glsl"), Charset.defaultCharset());
+                fragmentShader = Files.readString(Path.of(System.getProperty("user.dir") + File.separator + "\\Resources\\Shaders\\FragmentShader.glsl"), Charset.defaultCharset());
             } catch (NoSuchFileException f) {
                 // print stack trace if shader code cannot be found/read from
                 e.printStackTrace();
