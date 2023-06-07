@@ -13,7 +13,7 @@ public class MarchingCubes extends DataLoader {
     private static final int[][] triTable = TriangulationTable.getTriTable();
     private static final ArrayList<Float> vertices = new ArrayList<>();
     private static final ArrayList<Integer> indices = new ArrayList<>();
-    private static final ArrayList<Float> normals = new ArrayList<>();
+    private static final ArrayList<Vector3f> normals = new ArrayList<>();
     private static final ArrayList<Float> colours = new ArrayList<>();
     /**
      * Brightness threshold of image.
@@ -164,16 +164,31 @@ public class MarchingCubes extends DataLoader {
 
     // calculate normals of each vertex
     private static void calculateNormals() {
-        Vector3f o = new Vector3f(0, 0, 0);
-        // iterates over each vertex
-        for (int i = 0; i < (vertices.size() + 1) / 3; i++) {
-            Vector3f v = new Vector3f(vertices.get(i * 3), vertices.get(i * 3 + 1), vertices.get(i * 3 + 2));
+        for (int i = 0; i < (vertices.size() + 1) / 9; i++) {
+            Vector3f v1 = new Vector3f(vertices.get(i * 9), vertices.get(i * 9 + 1), vertices.get(i * 9 + 2));
+            Vector3f v2 = new Vector3f(vertices.get(i * 9 + 3), vertices.get(i * 9 + 4), vertices.get(i * 9 + 5));
+            Vector3f v3 = new Vector3f(vertices.get(i * 9 + 6), vertices.get(i * 9 + 7), vertices.get(i * 9 + 8));
 
-            // finds normal from direction of origin to vertex
-            normals.add(v.x - o.x);
-            normals.add(v.y - o.y);
-            normals.add(v.z - o.z);
+            Vector3f e1 = v2.sub(v1);
+            Vector3f e2 = v3.sub(v1);
+
+            Vector3f norm = (e1.cross(e2)).normalize();
+
+            normals.add(norm);
+            normals.add(norm);
+            normals.add(norm);
         }
+
+        //Vector3f o = new Vector3f(0, 0, 0);
+        // iterates over each vertex
+        //for (int i = 0; i < (vertices.size() + 1) / 3; i++) {
+        //    Vector3f v = new Vector3f(vertices.get(i * 3), vertices.get(i * 3 + 1), vertices.get(i * 3 + 2));
+
+        //    // finds normal from direction of origin to vertex
+        //    normals.add(v.x - o.x);
+        //    normals.add(v.y - o.y);
+        //    normals.add(v.z - o.z);
+        //}
     }
 
     // assign colours to each vertex
@@ -220,8 +235,14 @@ public class MarchingCubes extends DataLoader {
      * @return float array of normals
      */
     public static float[] getNormals() {
-        float[] arr = new float[normals.size()];
-        for (int i = 0; i < normals.size(); i++) arr[i] = normals.get(i);
+        float[] arr = new float[normals.size() * 3];
+
+        for (int i = 0; i < normals.size(); i++) {
+            arr[i * 3] = normals.get(i).x;
+            arr[i * 3 + 1] = normals.get(i).y;
+            arr[i * 3 + 2] = normals.get(i).z;
+        }
+
         return arr;
     }
 

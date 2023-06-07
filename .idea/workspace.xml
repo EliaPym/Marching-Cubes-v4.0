@@ -14,77 +14,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c85a6182-06d3-4de2-8690-d09c18340ca7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/allclasses-index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/allpackages-index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/data/DataLoader.Data.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/data/DataLoader.Vertex.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/data/DataLoader.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/data/class-use/DataLoader.Data.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/data/class-use/DataLoader.Vertex.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/data/class-use/DataLoader.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/data/package-summary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/data/package-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/data/package-use.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/element-list" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/help-doc.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-1.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-3.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-4.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-5.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/index-files/index-6.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/jquery-ui.overrides.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/legal/COPYRIGHT" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/legal/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/legal/jquery.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/legal/jqueryUI.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/member-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/module-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/overview-tree.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/package-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/resources/glass.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/resources/x.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_55_fbf9ee_1x400.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_65_dadada_1x400.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_75_dadada_1x400.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_75_e6e6e6_1x400.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_glass_95_fef1ec_1x400.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-bg_highlight-soft_75_cccccc_1x100.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_222222_256x240.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_2e83ff_256x240.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_454545_256x240.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_888888_256x240.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/images/ui-icons_cd0a0a_256x240.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/jquery-3.5.1.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/jquery-ui.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/jquery-ui.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script-dir/jquery-ui.structure.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/script.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/search.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/stylesheet.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/tag-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaDoc/type-search-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/TriangulationTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/TriangulationTable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/InputHandler$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/InputHandler$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/InputHandler$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/InputHandler$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/InputHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/InputHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/Mesh.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/Mesh.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/MeshLoader.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/MeshLoader.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/ShaderProgram.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/ShaderProgram.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/DataLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DataLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/MarchingCubes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/MarchingCubes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/TriangulationTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/TriangulationTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/InputHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/Mesh.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/Mesh.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/MeshLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/MeshLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/ShaderProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/ShaderProgram.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderEngine/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/FragmentShader.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/renderEngine/WindowView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/WindowView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -126,12 +59,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "settings.editor.selected.configurable": "editor.preferences.gutterIcons"
-  }
-}]]></component>
-  <component name="RunManager" selected="Application.LWJGL Debug">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="LWJGL Debug" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Marching-Cubes-v4.0" />
@@ -190,5 +118,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

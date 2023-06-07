@@ -62,6 +62,7 @@ public class WindowView {
     private static GLFWErrorCallback errorCallback;
     private static ShaderProgram shaderProgram;
     private final Timer timer;
+    private static Vector3f cameraPos = new Vector3f(0, 0, 0);
     /**
      * Position x of mesh.
      */
@@ -273,7 +274,7 @@ public class WindowView {
 
             // sets up view matrix
             viewMatrix = new Matrix4f().lookAt(
-                    new Vector3f(0, 0, 0),  // camera position
+                    cameraPos,  // camera position
                     new Vector3f(0, 0, -1), // camera look direction
                     new Vector3f(0, 1, 0)   // camera up direction
             );
@@ -371,17 +372,15 @@ public class WindowView {
 
         // create uniforms for lighting
         shaderProgram.createUniform("lightPos");
+        shaderProgram.createUniform("viewPos");
         shaderProgram.createUniform("ambientStrength");
-        shaderProgram.createUniform("enableDiffuse");
+        shaderProgram.createUniform("specularStrength");
 
-        // sets lighting values based on whether colour has been enabled
-        if (MarchingCubes.enableColours) {
-            shaderProgram.setUniform("ambientStrength", 1f);
-            shaderProgram.setUniform("enableDiffuse", 0);
-        } else {
-            shaderProgram.setUniform("ambientStrength", 0.5f);
-            shaderProgram.setUniform("enableDiffuse", 1);
-        }
+        shaderProgram.setUniform("viewPos", cameraPos);
+
+        // sets ambient and diffuse for shading
+        shaderProgram.setUniform("ambientStrength", 0.5f);
+        shaderProgram.setUniform("specularStrength", 0.3f);
     }
 
     // main loop that contains calls to the methods: update, input handler update, render
@@ -491,7 +490,7 @@ public class WindowView {
         // enabled vertex arrays for each VBO stored in VAO
         GL20.glEnableVertexAttribArray(0); // vertex VBO
         GL20.glEnableVertexAttribArray(1); // normal VBO
-        GL20.glEnableVertexAttribArray(2);// colour VBO
+        GL20.glEnableVertexAttribArray(2); // colour VBO
         // draw mesh to screen
         GL20.glDrawElements(GL_TRIANGLES, mesh.getVertexCount(), GL_UNSIGNED_INT, 0);
 
