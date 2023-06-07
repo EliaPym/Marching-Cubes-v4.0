@@ -65,7 +65,7 @@ public class DataLoader {
 
                     data[x][y][z] = new Data(
                             new Vertex(x, y, z),
-                            (float) (r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 // greyscale value of pixel
+                            (float) (r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 // brightness value of pixel
                     );
                 }
             }
