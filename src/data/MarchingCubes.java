@@ -121,19 +121,24 @@ public class MarchingCubes extends DataLoader {
 
     // interpolates position between vertex pair based off values
     private static Vertex VertexInterpolation(Data p1, Data p2) {
-        double mu;
+        if (p2.val < p1.val) {
+            Data temp = p1;
+            p1 = p2;
+            p2 = temp;
+        }
 
-        if (Math.abs(isoLevel - p1.val) < 0.00001) return p1.pos;
-        if (Math.abs(isoLevel - p2.val) < 0.00001) return p2.pos;
-        if (Math.abs(p1.val - p2.val) < 0.00001) return p1.pos;
+        Vertex p;
+        if (Math.abs(p1.val - p2.val) > 0.00001) {
+            float px = p1.pos.x + (p2.pos.x - p1.pos.x) / (p2.val - p1.val) * (isoLevel - p1.val);
+            float py = p1.pos.y + (p2.pos.y - p1.pos.y) / (p2.val - p1.val) * (isoLevel - p1.val);
+            float pz = p1.pos.z + (p2.pos.z - p1.pos.z) / (p2.val - p1.val) * (isoLevel - p1.val);
 
-        mu = (isoLevel - p1.val) / (p2.val - p1.val);
+            p = new Vertex(px, py, -pz);
+        } else {
+            p = p1.pos;
+        }
 
-        float x = (float) (p1.pos.x + mu * (p2.pos.x - p1.pos.x));
-        float y = (float) (p1.pos.y + mu * (p2.pos.y - p1.pos.y));
-        float z = -(float) (p1.pos.z + mu * (p2.pos.z - p1.pos.z));
-
-        return new Vertex(x, y, z);
+        return p;
     }
 
     // normalise vertices to centre around origin

@@ -14,11 +14,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c85a6182-06d3-4de2-8690-d09c18340ca7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/DataLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DataLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/MarchingCubes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/MarchingCubes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/FragmentShader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/WindowView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/WindowView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
