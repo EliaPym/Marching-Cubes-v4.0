@@ -36,6 +36,7 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
         userInput();
+        windowTitle = "Marching Cubes v4.0 - " + dir + " - DEMO";
 
         // read data from directory
         DataLoader.Data[][][] data = DataLoader.getData(dir);

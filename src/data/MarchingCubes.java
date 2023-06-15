@@ -2,8 +2,7 @@ package data;
 
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Constructs array of vertices, indices, normals and colours from given data.
@@ -11,10 +10,14 @@ import java.util.Arrays;
 public class MarchingCubes extends DataLoader {
     private static final int[] edgeTable = TriangulationTable.getEdgeTable();
     private static final int[][] triTable = TriangulationTable.getTriTable();
-    private static final ArrayList<Float> vertices = new ArrayList<>();
-    private static final ArrayList<Integer> indices = new ArrayList<>();
     private static final ArrayList<Vector3f> normals = new ArrayList<>();
-    private static final ArrayList<Float> colours = new ArrayList<>();
+
+    private static final ArrayList<Triangle> triangles = new ArrayList<>();
+
+    private static final ArrayList<Integer> hashList = new ArrayList<>();
+    private static final Hashtable<Integer, Vertex> vertHash = new Hashtable<>();
+    private static final Hashtable<Integer, Integer> indHash = new Hashtable<>();
+
     /**
      * Brightness threshold of image.
      */
@@ -42,8 +45,8 @@ public class MarchingCubes extends DataLoader {
                 for (int z = 0; z < data[0][0].length - 1; z++) {
                     try {
                         int edgeIndex = 0;
-                        Vertex[] vertList = new Vertex[12];
-                        Arrays.fill(vertList, new Vertex(0, 0, 0));
+                        Vector3f[] vertList = new Vector3f[12];
+                        Arrays.fill(vertList, new Vector3f(0, 0, 0));
 
                         // defines each vertex of a cube to march over
                         Data dp0, dp1, dp2, dp3, dp4, dp5, dp6, dp7;
@@ -85,57 +88,62 @@ public class MarchingCubes extends DataLoader {
                         if ((edgeTable[edgeIndex] & 1024) == 1024) vertList[10] = VertexInterpolation(dp2, dp6);
                         if ((edgeTable[edgeIndex] & 2048) == 2048) vertList[11] = VertexInterpolation(dp3, dp7);
 
-                        int triCount = 0;
+                        ArrayList<Integer> indexList = new ArrayList<>();
                         // iterate over the precomputed triangulation table at index of the edge index until a '-1' is found
                         for (int i = 0; triTable[edgeIndex][i] != -1; i++) {
-                            // add vertex of polygon to array list
-                            Vertex v = vertList[triTable[edgeIndex][i]];
-                            vertices.add(v.x);
-                            vertices.add(v.y);
-                            vertices.add(v.z);
+                            Vector3f v = vertList[triTable[edgeIndex][i]];
+                            Vertex vertex = new Vertex(new Vector3f(v.x, v.y, v.z));
+                            vertex.colour = assignColours(x, y, z);
 
-                            triCount++;
+                            int hash = vertex.pos.toString().hashCode();
+                            indexList.add(hash);
 
-                            if (triCount == 3) {
-                                // add indices of polygon to array list
-                                // reverse order otherwise polygon face will point inwards
-                                indices.add(vertexCount + 2);
-                                indices.add(vertexCount + 1);
-                                indices.add(vertexCount);
-
-                                vertexCount += 3;
-                                triCount = 0;
+                            if (indHash.get(hash) == null) {
+                                vertHash.put(hash, vertex);
+                                indHash.put(hash, vertexCount);
+                                hashList.add(hash);
+                                vertexCount++;
                             }
 
-                            assignColours(x, y, z);
+                            if ((i + 1) % 3 == 0) {
+                                Triangle t = new Triangle(
+                                        indHash.get(indexList.get(0)),
+                                        indHash.get(indexList.get(1)),
+                                        indHash.get(indexList.get(2)));
+                                t.normal = calculateTriangleNormals(
+                                        vertHash.get(indexList.get(0)),
+                                        vertHash.get(indexList.get(1)),
+                                        vertHash.get(indexList.get(2)));
+                                triangles.add(t);
+                                indexList.clear();
+                            }
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
-        calculateNormals();
+        calculateVertexNormals();
     }
 
     // interpolates position between vertex pair based off values
-    private static Vertex VertexInterpolation(Data p1, Data p2) {
+    private static Vector3f VertexInterpolation(Data p1, Data p2) {
         if (p2.val < p1.val) {
             Data temp = p1;
             p1 = p2;
             p2 = temp;
         }
 
-        Vertex p;
+        Vector3f p;
         if (Math.abs(p1.val - p2.val) > 0.00001) {
             float px = p1.pos.x + (p2.pos.x - p1.pos.x) / (p2.val - p1.val) * (isoLevel - p1.val);
             float py = p1.pos.y + (p2.pos.y - p1.pos.y) / (p2.val - p1.val) * (isoLevel - p1.val);
             float pz = p1.pos.z + (p2.pos.z - p1.pos.z) / (p2.val - p1.val) * (isoLevel - p1.val);
 
-            p = new Vertex(px, py, -pz);
+            p = new Vector3f(px, py, -pz);
         } else {
-            p = p1.pos;
+            p = new Vector3f(p1.pos.x, p1.pos.y, p1.pos.z);
         }
 
         return p;
@@ -144,72 +152,85 @@ public class MarchingCubes extends DataLoader {
     // normalise vertices to centre around origin
     private static void normaliseVertices() {
         // calculate maximum x, y, z positions
-        for (int x = 0; x < data.length; x++) {
-            for (int y = 0; y < data[0].length; y++) {
-                for (int z = 0; z < data[0][0].length; z++) {
-                    if (data[x][y][z].pos.x > max_x) max_x = data[x][y][z].pos.x;
-                    if (data[x][y][z].pos.y > max_y) max_y = data[x][y][z].pos.y;
-                    if (data[x][y][z].pos.z > max_z) max_z = data[x][y][z].pos.z;
+        for (Data[][] dataX : data) {
+            for (Data[] dataXY : dataX) {
+                for (Data dataXYZ : dataXY) {
+                    if (dataXYZ.pos.x > max_x) max_x = dataXYZ.pos.x;
+                    if (dataXYZ.pos.y > max_y) max_y = dataXYZ.pos.y;
+                    if (dataXYZ.pos.z > max_z) max_z = dataXYZ.pos.z;
                 }
             }
         }
         System.out.printf("MAX_X: %f | MAX_Y: %f | MAX_Z: %f%n", max_x, max_y, max_z);
 
         // translate each vertex by half the negative maximum value
-        for (int x = 0; x < data.length; x++) {
-            for (int y = 0; y < data[0].length; y++) {
-                for (int z = 0; z < data[0][0].length; z++) {
-                    data[x][y][z].pos.x = data[x][y][z].pos.x - (max_x / 2);
-                    data[x][y][z].pos.y = data[x][y][z].pos.y - (max_y / 2);
-                    data[x][y][z].pos.z = data[x][y][z].pos.z - (max_z / 2);
+        for (Data[][] dataX : data) {
+            for (Data[] dataXY : dataX) {
+                for (Data dataXYZ : dataXY) {
+                    dataXYZ.pos.x = dataXYZ.pos.x - (max_x / 2);
+                    dataXYZ.pos.y = dataXYZ.pos.y - (max_y / 2);
+                    dataXYZ.pos.z = dataXYZ.pos.z - (max_z / 2);
                 }
             }
         }
     }
 
     // calculate normals of each vertex
-    private static void calculateNormals() {
-        for (int i = 0; i < (vertices.size() + 1) / 9; i++) {
-            Vector3f v1 = new Vector3f(vertices.get(i * 9), vertices.get(i * 9 + 1), vertices.get(i * 9 + 2));
-            Vector3f v2 = new Vector3f(vertices.get(i * 9 + 3), vertices.get(i * 9 + 4), vertices.get(i * 9 + 5));
-            Vector3f v3 = new Vector3f(vertices.get(i * 9 + 6), vertices.get(i * 9 + 7), vertices.get(i * 9 + 8));
+    private static Vector3f calculateTriangleNormals(Vertex vertex1, Vertex vertex2, Vertex vertex3) {
+        Vector3f v1 = new Vector3f(vertex1.pos.x, vertex1.pos.y, vertex1.pos.z);
+        Vector3f v2 = new Vector3f(vertex2.pos.x, vertex2.pos.y, vertex2.pos.z);
+        Vector3f v3 = new Vector3f(vertex3.pos.x, vertex3.pos.y, vertex3.pos.z);
 
-            Vector3f e1 = v2.sub(v1);
-            Vector3f e2 = v3.sub(v1);
+        Vector3f e1 = v2.sub(v1);
+        Vector3f e2 = v3.sub(v1);
 
-            Vector3f norm = (e1.cross(e2)).normalize();
+        return (e1.cross(e2)).normalize();
+    }
 
-            normals.add(norm);
-            normals.add(norm);
-            normals.add(norm);
+    private static void calculateVertexNormals() {
+        HashMap<Integer, List<Triangle>> vertexTriangles = new HashMap<>();
+
+        for (Triangle t : triangles) {
+            addToVertexTriangles(vertexTriangles, t.v1, t);
+            addToVertexTriangles(vertexTriangles, t.v2, t);
+            addToVertexTriangles(vertexTriangles, t.v3, t);
         }
 
-        //Vector3f o = new Vector3f(0, 0, 0);
-        // iterates over each vertex
-        //for (int i = 0; i < (vertices.size() + 1) / 3; i++) {
-        //    Vector3f v = new Vector3f(vertices.get(i * 3), vertices.get(i * 3 + 1), vertices.get(i * 3 + 2));
+        for (Integer h : hashList) {
+            Vector3f sum = new Vector3f();
+            int count = 0;
+            List<Triangle> vTriList = vertexTriangles.get(indHash.get(h));
+            if (vTriList != null) {
+                for (Triangle t : vTriList) {
+                    sum = sum.add(t.normal);
+                    count++;
+                }
+            }
+            normals.add((sum.div(count)).normalize());
+        }
+    }
 
-        //    // finds normal from direction of origin to vertex
-        //    normals.add(v.x - o.x);
-        //    normals.add(v.y - o.y);
-        //    normals.add(v.z - o.z);
-        //}
+    private static void addToVertexTriangles(
+            HashMap<Integer, List<Triangle>> vertexTriangles,
+            int index,
+            Triangle t) {
+        List<Triangle> triList = vertexTriangles.computeIfAbsent(index, k -> new ArrayList<>());
+        triList.add(t);
     }
 
     // assign colours to each vertex
-    private static void assignColours(int x, int y, int z) {
+    private static Vector3f assignColours(int x, int y, int z) {
+        float r, g, b;
         if (enableColours) {
-            float r = (float) x / data.length;
-            float g = (float) y / data[0].length;
-            float b = (float) z / data[0][0].length;
-            colours.add(r);
-            colours.add(g);
-            colours.add(b);
+            r = (float) x / data.length;
+            g = (float) y / data[0].length;
+            b = (float) z / data[0][0].length;
         } else {
-            colours.add(0.6f);
-            colours.add(0.6f);
-            colours.add(0.6f);
+            r = 0.6f;
+            g = 0.6f;
+            b = 0.6f;
         }
+        return new Vector3f(r, g, b);
     }
 
     /**
@@ -218,8 +239,12 @@ public class MarchingCubes extends DataLoader {
      * @return float array of vertices
      */
     public static float[] getVertices() {
-        float[] arr = new float[vertices.size()];
-        for (int i = 0; i < vertices.size(); i++) arr[i] = vertices.get(i);
+        float[] arr = new float[hashList.size() * 3];
+        for (int i = 0; i < hashList.size(); i++) {
+            arr[i * 3    ] = vertHash.get(hashList.get(i)).pos.x;
+            arr[i * 3 + 1] = vertHash.get(hashList.get(i)).pos.y;
+            arr[i * 3 + 2] = vertHash.get(hashList.get(i)).pos.z - 2;
+        }
         return arr;
     }
 
@@ -229,8 +254,12 @@ public class MarchingCubes extends DataLoader {
      * @return integer array of indices
      */
     public static int[] getIndices() {
-        int[] arr = new int[indices.size()];
-        for (int i = 0; i < indices.size(); i++) arr[i] = indices.get(i);
+        int[] arr = new int[triangles.size() * 3];
+        for (int i = 0; i < triangles.size(); i++) {
+            arr[i * 3    ] = triangles.get(i).v3;
+            arr[i * 3 + 1] = triangles.get(i).v2;
+            arr[i * 3 + 2] = triangles.get(i).v1;
+        }
         return arr;
     }
 
@@ -241,13 +270,11 @@ public class MarchingCubes extends DataLoader {
      */
     public static float[] getNormals() {
         float[] arr = new float[normals.size() * 3];
-
         for (int i = 0; i < normals.size(); i++) {
             arr[i * 3] = normals.get(i).x;
             arr[i * 3 + 1] = normals.get(i).y;
             arr[i * 3 + 2] = normals.get(i).z;
         }
-
         return arr;
     }
 
@@ -257,8 +284,12 @@ public class MarchingCubes extends DataLoader {
      * @return float array of colours
      */
     public static float[] getColours() {
-        float[] arr = new float[colours.size()];
-        for (int i = 0; i < colours.size(); i++) arr[i] = colours.get(i);
+        float[] arr = new float[hashList.size() * 3];
+        for (int i = 0; i < hashList.size(); i++) {
+            arr[i * 3] = vertHash.get(hashList.get(i)).colour.x;
+            arr[i * 3 + 1] = vertHash.get(hashList.get(i)).colour.y;
+            arr[i * 3 + 2] = vertHash.get(hashList.get(i)).colour.z;
+        }
         return arr;
     }
 

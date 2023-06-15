@@ -1,5 +1,7 @@
 package data;
 
+import org.joml.Vector3f;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -64,7 +66,7 @@ public class DataLoader {
                     int b = clr & 0x000000ff;
 
                     data[x][y][z] = new Data(
-                            new Vertex(x, y, z),
+                            new Vector3f(x, y, z),
                             (float) (r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 // brightness value of pixel
                     );
                 }
@@ -76,30 +78,43 @@ public class DataLoader {
      * Vertex class as a 3D vector.
      */
     public static class Vertex {
-        /**
-         * X coordinate of vertex.
-         */
-        public float x;
-        /**
-         * Y coordinate of vertex.
-         */
-        public float y;
-        /**
-         * Z coordinate of vertex.
-         */
-        public float z;
+        public Vector3f pos;
+
+        public Vector3f colour;
 
         /**
          * Instantiates a new Vertex.
          *
-         * @param x x component of position
-         * @param y y component of position
-         * @param z z component of position
+
          */
-        public Vertex(float x, float y, float z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+        public Vertex(Vector3f pos) {
+            this.pos = pos;
+        }
+    }
+
+    public static class Triangle {
+        int v1;
+        int v2;
+        int v3;
+
+        Vector3f normal;
+
+        public Triangle(int v1, int v2, int v3){
+            this.v1 = v1;
+            this.v2 = v2;
+            this.v3 = v3;
+        }
+
+        public int getV1() {
+            return v1;
+        }
+
+        public int getV2() {
+            return v2;
+        }
+
+        public int getV3() {
+            return v3;
         }
     }
 
@@ -110,7 +125,7 @@ public class DataLoader {
         /**
          * Position of data in 3D space.
          */
-        Vertex pos;
+        Vector3f pos;
         /**
          * Value of data.
          */
@@ -122,7 +137,7 @@ public class DataLoader {
          * @param pos vertex position of data
          * @param val value of data
          */
-        public Data(Vertex pos, float val) {
+        public Data(Vector3f pos, float val) {
             this.pos = pos;
             this.val = val;
         }
