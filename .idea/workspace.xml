@@ -15,10 +15,16 @@
   <component name="ChangeListManager">
     <list default="true" id="c85a6182-06d3-4de2-8690-d09c18340ca7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader$Data.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader$Data.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader$Vertex.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader$Vertex.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/DataLoader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/MarchingCubes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/data/MarchingCubes.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/FragmentShader.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Marching-Cubes-v4.0/renderEngine/WindowView.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/DataLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DataLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/MarchingCubes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/MarchingCubes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/FragmentShader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderEngine/WindowView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderEngine/WindowView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,5 +125,22 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/data/MarchingCubes.java</url>
+          <line>165</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="DataLoader.directory" />
+        <watch expression="((Hashtable)MarchingCubes.vertexHash).entrySet().toArray()[368]" custom="java.util.Hashtable" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
